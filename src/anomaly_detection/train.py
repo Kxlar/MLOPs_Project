@@ -22,7 +22,6 @@ from src.anomaly_detection.model import (
 # =======================
 # CONFIG (your paths)
 # =======================
-DINOV3_LOCATION = "./dinov3"
 WEIGHTS = ".models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth"
 
 DATA_ROOT = "./data/carpet"
@@ -69,7 +68,6 @@ def save_heatmap_and_overlay(img_path: str, am_up: np.ndarray, img_size: int, ou
 def main():
     print("DATA_ROOT:", DATA_ROOT)
     print("CLASS_NAME:", CLASS_NAME)
-    print("DINOv3_REPO:", DINOV3_LOCATION)
     print("DINOv3_WEIGHTS:", WEIGHTS)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -92,7 +90,7 @@ def main():
     # -----------------------
     # Model + feature extractor
     # -----------------------
-    dinov3_model = load_dinov3(DINOV3_LOCATION, WEIGHTS, device)
+    dinov3_model = load_dinov3(WEIGHTS, device)
     feature_extractor = DINOv3FeatureExtractor(dinov3_model).eval().to(device)
 
     # -----------------------
