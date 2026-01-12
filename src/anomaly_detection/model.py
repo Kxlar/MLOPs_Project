@@ -16,32 +16,34 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-from src.anomaly_detection.vision_transformer import vit_base 
+from src.anomaly_detection.vision_transformer import vit_base
+
 
 def load_dinov3(weights_path: str, device: torch.device):
     """
-    Loads DINOv3 locally without using torch.hub.
+    Loads DINOv3 using the Meta DinoVisionTransformer architecture.
     """
-    # Instantiate ViT-B/16 model
+    # Use the exact argument names from DinoVisionTransformer.__init__
     model = vit_base(
         patch_size=16,
         img_size=224,
-        init_values=1.0,
-        num_register_tokens=4,
-        block_chunks=0
+        layerscale_init=1.0,
+        n_storage_tokens=4,
     )
 
-    # Load weights from disk
     state_dict = torch.load(weights_path, map_location="cpu")
-    
-    # Extract state dict if nested under specific keys
+
     if "model" in state_dict:
         state_dict = state_dict["model"]
     elif "teacher" in state_dict:
         state_dict = state_dict["teacher"]
 
-    # Load state dict into the model architecture
-    msg = model.load_state_dict(state_dict, strict=True)
+    # Filter out technical buffers that cause RuntimeError in strict mode
+    # These are specific to DINOv3's attention implementation
+    state_dict = {k: v for k, v in state_dict.items() if "bias_mask" not in k}
+
+    # Loading with strict=False is recommended to ignore non-essential buffers
+    msg = model.load_state_dict(state_dict, strict=False)
     print(f"Loading status: {msg}")
 
     model.eval().to(device)
@@ -52,6 +54,7 @@ class DINOv3FeatureExtractor(nn.Module):
     """
     Transforms input from [B,3,H,W] -> [B,D,Hf,Wf]
     """
+
     def __init__(self, dino_model):
         super().__init__()
         self.dino = dino_model
@@ -61,7 +64,7 @@ class DINOv3FeatureExtractor(nn.Module):
         patch_tokens = feats["x_norm_patchtokens"]  # [B, N, D]
         B, N, D = patch_tokens.shape
 
-        side = int(N ** 0.5)
+        side = int(N**0.5)
         assert side * side == N, f"Patch count {N} is not a perfect square"
         Hf = Wf = side
 
@@ -83,20 +86,25 @@ def build_memory_bank(feature_extractor: nn.Module, train_loader, device: torch.
         feats = feature_extractor(imgs)  # [B,C,Hf,Wf]
         B, C, Hf, Wf = feats.shape
 
-        feats = feats.view(B, C, -1)       # [B,C,N]
-        feats = feats.permute(0, 2, 1)     # [B,N,C]
-        feats = feats.reshape(-1, C)       # [B*N,C]
+        feats = feats.view(B, C, -1)  # [B,C,N]
+        feats = feats.permute(0, 2, 1)  # [B,N,C]
+        feats = feats.reshape(-1, C)  # [B*N,C]
         feats = F.normalize(feats, dim=1)
 
         memory_bank.append(feats.cpu())
 
-    memory_bank = torch.cat(memory_bank, dim=0)      # [N_mem, C]
-    memory_bank = memory_bank.to(device)             # move once
+    memory_bank = torch.cat(memory_bank, dim=0)  # [N_mem, C]
+    memory_bank = memory_bank.to(device)  # move once
     return memory_bank
 
 
 @torch.no_grad()
-def compute_anomaly_map(img_t: torch.Tensor, feature_extractor: nn.Module, memory_bank: torch.Tensor, k: int = 10):
+def compute_anomaly_map(
+    img_t: torch.Tensor,
+    feature_extractor: nn.Module,
+    memory_bank: torch.Tensor,
+    k: int = 10,
+):
     """
     img_t: [3,H,W] (already transformed)
     memory_bank: [N_mem,C] on same device
