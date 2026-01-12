@@ -9,8 +9,8 @@ from PIL import Image
 import torch
 from sklearn.metrics import roc_auc_score, roc_curve, auc
 
-from data import build_dataloaders, load_ground_truth_mask
-from model import (
+from src.anomaly_detection.data import build_dataloaders, load_ground_truth_mask
+from src.anomaly_detection.model import (
     load_dinov3,
     DINOv3FeatureExtractor,
     build_memory_bank,
@@ -22,16 +22,16 @@ from model import (
 # =======================
 # CONFIG (your paths)
 # =======================
-DINOV3_LOCATION = r"C:\Users\snehi\Documents\Deep Learning\dinov3"
-WEIGHTS = r"C:\Users\snehi\Documents\Deep Learning\dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth"
+DINOV3_LOCATION = "./dinov3"
+WEIGHTS = ".models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth"
 
-DATA_ROOT = r"C:\Users\snehi\Documents\Deep Learning\mvtec_anomaly_detection"
+DATA_ROOT = "./data/carpet"
 CLASS_NAME = "carpet"
 IMG_SIZE = 224
 BATCH_SIZE = 8
 K = 10
 
-RESULTS_ROOT = Path("results_baseline") / CLASS_NAME
+RESULTS_ROOT = Path("./reports/figures") / CLASS_NAME
 HEATMAP_DIR = RESULTS_ROOT / "heatmaps"
 OVERLAY_DIR = RESULTS_ROOT / "overlays"
 ROC_DIR = RESULTS_ROOT / "roc"

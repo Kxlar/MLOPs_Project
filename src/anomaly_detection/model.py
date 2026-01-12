@@ -8,16 +8,34 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-def load_dinov3(dinov3_repo: str, dinov3_weights: str, device: torch.device):
+from .vision_transformer import vit_base 
+
+def load_dinov3(weights_path: str, device: torch.device):
     """
-    Loads DINOv3 from local repo via torch.hub.
+    Loads DINOv3 locally without using torch.hub.
     """
-    model = torch.hub.load(
-        dinov3_repo,
-        "dinov3_vitb16",
-        source="local",
-        weights=dinov3_weights,
+    # Instantiate ViT-B/16 model
+    model = vit_base(
+        patch_size=16,
+        img_size=224,
+        init_values=1.0,
+        num_register_tokens=4,
+        block_chunks=0
     )
+
+    # Load weights from disk
+    state_dict = torch.load(weights_path, map_location="cpu")
+    
+    # Extract state dict if nested under specific keys
+    if "model" in state_dict:
+        state_dict = state_dict["model"]
+    elif "teacher" in state_dict:
+        state_dict = state_dict["teacher"]
+
+    # Load state dict into the model architecture
+    msg = model.load_state_dict(state_dict, strict=True)
+    print(f"Loading status: {msg}")
+
     model.eval().to(device)
     return model
 
