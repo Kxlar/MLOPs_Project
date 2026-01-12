@@ -2,13 +2,21 @@
 from pathlib import Path
 from typing import Tuple
 
+import sys
+from pathlib import Path
+
+current_file = Path(__file__).resolve()
+project_root = current_file.parents[2]
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 
-from .vision_transformer import vit_base 
+from src.anomaly_detection.vision_transformer import vit_base 
 
 def load_dinov3(weights_path: str, device: torch.device):
     """

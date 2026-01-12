@@ -1,6 +1,13 @@
-# train.py
 import time
 from pathlib import Path
+
+import sys
+from pathlib import Path
+
+current_file = Path(__file__).resolve()
+project_root = current_file.parents[2]
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -22,9 +29,9 @@ from src.anomaly_detection.model import (
 # =======================
 # CONFIG (your paths)
 # =======================
-WEIGHTS = ".models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth"
+WEIGHTS = "./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth"
 
-DATA_ROOT = "./data/carpet"
+DATA_ROOT = "./data"
 CLASS_NAME = "carpet"
 IMG_SIZE = 224
 BATCH_SIZE = 8
@@ -40,7 +47,13 @@ OVERLAY_DIR.mkdir(parents=True, exist_ok=True)
 ROC_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def save_heatmap_and_overlay(img_path: str, am_up: np.ndarray, img_size: int, out_heatmap: Path, out_overlay: Path):
+def save_heatmap_and_overlay(
+    img_path: str,
+    am_up: np.ndarray,
+    img_size: int,
+    out_heatmap: Path,
+    out_overlay: Path,
+):
     am_norm = (am_up - am_up.min()) / (am_up.max() - am_up.min() + 1e-8)
 
     orig_img = Image.open(img_path).convert("RGB")
@@ -85,7 +98,9 @@ def main():
     test_labels = np.array(test_dataset.labels)
     n_good = int(np.sum(test_labels == 0))
     n_def = int(np.sum(test_labels == 1))
-    print(f"Test set stats for '{CLASS_NAME}': good={n_good}, defective={n_def}, total={len(test_dataset)}")
+    print(
+        f"Test set stats for '{CLASS_NAME}': good={n_good}, defective={n_def}, total={len(test_dataset)}"
+    )
 
     # -----------------------
     # Model + feature extractor
@@ -132,7 +147,9 @@ def main():
 
     print(f"[{CLASS_NAME}] ROC AUC (max over patches):  {auc_max:.4f}")
     print(f"[{CLASS_NAME}] ROC AUC (mean over patches): {auc_mean:.4f}")
-    print(f"[{CLASS_NAME}] Avg inference time: {avg_ms:.2f} ms (std {std_ms:.2f} ms, N={len(inference_times)})")
+    print(
+        f"[{CLASS_NAME}] Avg inference time: {avg_ms:.2f} ms (std {std_ms:.2f} ms, N={len(inference_times)})"
+    )
 
     # histogram
     plt.hist(y_score_max[y_true == 0], bins=20, alpha=0.6, label="good")
@@ -163,7 +180,9 @@ def main():
         heatmap_path = HEATMAP_DIR / f"{base_name}_{label_str}.png"
         overlay_path = OVERLAY_DIR / f"{base_name}_{label_str}.png"
 
-        save_heatmap_and_overlay(str(img_path), am_up, IMG_SIZE, heatmap_path, overlay_path)
+        save_heatmap_and_overlay(
+            str(img_path), am_up, IMG_SIZE, heatmap_path, overlay_path
+        )
 
     print("Done saving ALL baseline heatmaps and overlays")
 
