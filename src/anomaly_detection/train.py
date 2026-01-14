@@ -1,8 +1,9 @@
+from __future__ import annotations
+
 import time
 from pathlib import Path
 
 import sys
-from pathlib import Path
 
 current_file = Path(__file__).resolve()
 project_root = current_file.parents[2]
@@ -26,25 +27,12 @@ from src.anomaly_detection.model import (
     upsample_anomaly_map,
 )
 
-# =======================
-# CONFIG (your paths)
-# =======================
-WEIGHTS = "./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth"
-
-DATA_ROOT = "./data"
-CLASS_NAME = "carpet"
-IMG_SIZE = 224
-BATCH_SIZE = 8
-K = 10
-
-RESULTS_ROOT = Path("./reports/figures") / CLASS_NAME
-HEATMAP_DIR = RESULTS_ROOT / "heatmaps"
-OVERLAY_DIR = RESULTS_ROOT / "overlays"
-ROC_DIR = RESULTS_ROOT / "roc"
-
-HEATMAP_DIR.mkdir(parents=True, exist_ok=True)
-OVERLAY_DIR.mkdir(parents=True, exist_ok=True)
-ROC_DIR.mkdir(parents=True, exist_ok=True)
+DEFAULT_WEIGHTS = "./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth"
+DEFAULT_DATA_ROOT = "./data"
+DEFAULT_CLASS_NAME = "carpet"
+DEFAULT_IMG_SIZE = 224
+DEFAULT_BATCH_SIZE = 8
+DEFAULT_K = 10
 
 
 def save_heatmap_and_overlay(
@@ -53,7 +41,8 @@ def save_heatmap_and_overlay(
     img_size: int,
     out_heatmap: Path,
     out_overlay: Path,
-):
+) -> None:
+    """Save standalone heatmap and overlay visualizations for one image."""
     am_norm = (am_up - am_up.min()) / (am_up.max() - am_up.min() + 1e-8)
 
     orig_img = Image.open(img_path).convert("RGB")
@@ -78,19 +67,35 @@ def save_heatmap_and_overlay(
     plt.close()
 
 
-def main():
-    print("DATA_ROOT:", DATA_ROOT)
-    print("CLASS_NAME:", CLASS_NAME)
-    print("DINOv3_WEIGHTS:", WEIGHTS)
+def run_baseline(
+    weights: str | Path = DEFAULT_WEIGHTS,
+    data_root: str | Path = DEFAULT_DATA_ROOT,
+    class_name: str = DEFAULT_CLASS_NAME,
+    img_size: int = DEFAULT_IMG_SIZE,
+    batch_size: int = DEFAULT_BATCH_SIZE,
+    k: int = DEFAULT_K,
+    show_plots: bool = False,
+) -> None:
+    """Run the kNN baseline and persist figures/heatmaps."""
+
+    results_root = Path("./reports/figures") / class_name
+    heatmap_dir = results_root / "heatmaps"
+    overlay_dir = results_root / "overlays"
+    roc_dir = results_root / "roc"
+
+    heatmap_dir.mkdir(parents=True, exist_ok=True)
+    overlay_dir.mkdir(parents=True, exist_ok=True)
+    roc_dir.mkdir(parents=True, exist_ok=True)
+
+    print("DATA_ROOT:", data_root)
+    print("CLASS_NAME:", class_name)
+    print("DINOv3_WEIGHTS:", weights)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Device:", device)
 
-    # -----------------------
-    # Data
-    # -----------------------
     train_dataset, test_dataset, train_loader = build_dataloaders(
-        DATA_ROOT, CLASS_NAME, IMG_SIZE, batch_size=BATCH_SIZE
+        data_root, class_name, img_size, batch_size=batch_size
     )
     print("Train images:", len(train_dataset))
     print("Test images:", len(test_dataset))
@@ -99,34 +104,25 @@ def main():
     n_good = int(np.sum(test_labels == 0))
     n_def = int(np.sum(test_labels == 1))
     print(
-        f"Test set stats for '{CLASS_NAME}': good={n_good}, defective={n_def}, total={len(test_dataset)}"
+        f"Test set stats for '{class_name}': good={n_good}, defective={n_def}, total={len(test_dataset)}"
     )
 
-    # -----------------------
-    # Model + feature extractor
-    # -----------------------
-    dinov3_model = load_dinov3(WEIGHTS, device)
+    dinov3_model = load_dinov3(weights, device)
     feature_extractor = DINOv3FeatureExtractor(dinov3_model).eval().to(device)
 
-    # -----------------------
-    # Memory bank
-    # -----------------------
     memory_bank = build_memory_bank(feature_extractor, train_loader, device)
     print("Memory bank shape:", tuple(memory_bank.shape))
 
-    # -----------------------
-    # Image-level evaluation + timing
-    # -----------------------
-    y_true = []
-    y_score_max = []
-    y_score_mean = []
-    inference_times = []
+    y_true: list[int] = []
+    y_score_max: list[float] = []
+    y_score_mean: list[float] = []
+    inference_times: list[float] = []
 
     for i in range(len(test_dataset)):
         img_t, label, path = test_dataset[i]
 
         start = time.time()
-        anomaly_map = compute_anomaly_map(img_t, feature_extractor, memory_bank, k=K)
+        anomaly_map = compute_anomaly_map(img_t, feature_extractor, memory_bank, k=k)
         end = time.time()
 
         inference_times.append(end - start)
@@ -135,72 +131,65 @@ def main():
         y_score_max.append(reduce_anomaly_map(anomaly_map, mode="max"))
         y_score_mean.append(reduce_anomaly_map(anomaly_map, mode="mean"))
 
-    y_true = np.array(y_true)
-    y_score_max = np.array(y_score_max)
-    y_score_mean = np.array(y_score_mean)
+    y_true_np = np.array(y_true)
+    y_score_max_np = np.array(y_score_max)
+    y_score_mean_np = np.array(y_score_mean)
 
-    auc_max = roc_auc_score(y_true, y_score_max)
-    auc_mean = roc_auc_score(y_true, y_score_mean)
+    auc_max = roc_auc_score(y_true_np, y_score_max_np)
+    auc_mean = roc_auc_score(y_true_np, y_score_mean_np)
 
     avg_ms = float(np.mean(inference_times)) * 1000
     std_ms = float(np.std(inference_times)) * 1000
 
-    print(f"[{CLASS_NAME}] ROC AUC (max over patches):  {auc_max:.4f}")
-    print(f"[{CLASS_NAME}] ROC AUC (mean over patches): {auc_mean:.4f}")
+    print(f"[{class_name}] ROC AUC (max over patches):  {auc_max:.4f}")
+    print(f"[{class_name}] ROC AUC (mean over patches): {auc_mean:.4f}")
     print(
-        f"[{CLASS_NAME}] Avg inference time: {avg_ms:.2f} ms (std {std_ms:.2f} ms, N={len(inference_times)})"
+        f"[{class_name}] Avg inference time: {avg_ms:.2f} ms (std {std_ms:.2f} ms, N={len(inference_times)})"
     )
 
-    # histogram
-    plt.hist(y_score_max[y_true == 0], bins=20, alpha=0.6, label="good")
-    plt.hist(y_score_max[y_true == 1], bins=20, alpha=0.6, label="defective")
+    plt.hist(y_score_max_np[y_true_np == 0], bins=20, alpha=0.6, label="good")
+    plt.hist(y_score_max_np[y_true_np == 1], bins=20, alpha=0.6, label="defective")
     plt.legend()
-    plt.title(f"{CLASS_NAME} - Baseline image anomaly scores (max)")
+    plt.title(f"{class_name} - Baseline image anomaly scores (max)")
     plt.xlabel("Anomaly score")
     plt.ylabel("Count")
-    plt.savefig(ROC_DIR / "image_score_hist_max.png", bbox_inches="tight", pad_inches=0)
-    plt.show()
+    plt.savefig(roc_dir / "image_score_hist_max.png", bbox_inches="tight", pad_inches=0)
+    if show_plots:
+        plt.show()
+    plt.close()
 
-    # -----------------------
-    # Save heatmaps + overlays
-    # -----------------------
-    print("Saving heatmaps to:", HEATMAP_DIR)
-    print("Saving overlays to:", OVERLAY_DIR)
+    print("Saving heatmaps to:", heatmap_dir)
+    print("Saving overlays to:", overlay_dir)
 
     for i in range(len(test_dataset)):
         img_t, label, path = test_dataset[i]
-        anomaly_map = compute_anomaly_map(img_t, feature_extractor, memory_bank, k=K)
+        anomaly_map = compute_anomaly_map(img_t, feature_extractor, memory_bank, k=k)
 
-        am_up = upsample_anomaly_map(anomaly_map, IMG_SIZE)
+        am_up = upsample_anomaly_map(anomaly_map, img_size)
 
         img_path = Path(path)
         base_name = img_path.stem
         label_str = f"label{label}"
 
-        heatmap_path = HEATMAP_DIR / f"{base_name}_{label_str}.png"
-        overlay_path = OVERLAY_DIR / f"{base_name}_{label_str}.png"
+        heatmap_path = heatmap_dir / f"{base_name}_{label_str}.png"
+        overlay_path = overlay_dir / f"{base_name}_{label_str}.png"
 
-        save_heatmap_and_overlay(
-            str(img_path), am_up, IMG_SIZE, heatmap_path, overlay_path
-        )
+        save_heatmap_and_overlay(str(img_path), am_up, img_size, heatmap_path, overlay_path)
 
     print("Done saving ALL baseline heatmaps and overlays")
 
-    # -----------------------
-    # Pixel-level ROC (only defective images)
-    # -----------------------
-    pixel_y_true = []
-    pixel_scores = []
+    pixel_y_true: list[np.ndarray] = []
+    pixel_scores: list[np.ndarray] = []
 
     for i in range(len(test_dataset)):
         img_t, label, path = test_dataset[i]
         if label == 0:
             continue
 
-        anomaly_map = compute_anomaly_map(img_t, feature_extractor, memory_bank, k=K)
-        am_up = upsample_anomaly_map(anomaly_map, IMG_SIZE)
+        anomaly_map = compute_anomaly_map(img_t, feature_extractor, memory_bank, k=k)
+        am_up = upsample_anomaly_map(anomaly_map, img_size)
 
-        gt_mask = load_ground_truth_mask(path, DATA_ROOT, CLASS_NAME, IMG_SIZE)
+        gt_mask = load_ground_truth_mask(path, data_root, class_name, img_size)
         if gt_mask is None:
             continue
 
@@ -211,11 +200,11 @@ def main():
         print("No ground-truth masks found for defective images.")
         return
 
-    pixel_y_true = np.concatenate(pixel_y_true, axis=0)
-    pixel_scores = np.concatenate(pixel_scores, axis=0)
+    pixel_y_true_np = np.concatenate(pixel_y_true, axis=0)
+    pixel_scores_np = np.concatenate(pixel_scores, axis=0)
 
-    pixel_auc = roc_auc_score(pixel_y_true, pixel_scores)
-    fpr, tpr, _ = roc_curve(pixel_y_true, pixel_scores)
+    pixel_auc = roc_auc_score(pixel_y_true_np, pixel_scores_np)
+    fpr, tpr, _ = roc_curve(pixel_y_true_np, pixel_scores_np)
     roc_auc_val = auc(fpr, tpr)
 
     plt.figure(figsize=(5, 5))
@@ -223,13 +212,19 @@ def main():
     plt.plot([0, 1], [0, 1], linestyle="--", label="random")
     plt.xlabel("False Positive Rate")
     plt.ylabel("True Positive Rate")
-    plt.title(f"{CLASS_NAME} – Pixel-level ROC (kNN baseline)")
+    plt.title(f"{class_name} – Pixel-level ROC (kNN baseline)")
     plt.legend()
     plt.grid(True)
-    plt.savefig(ROC_DIR / "pixel_roc.png", bbox_inches="tight", pad_inches=0)
-    plt.show()
+    plt.savefig(roc_dir / "pixel_roc.png", bbox_inches="tight", pad_inches=0)
+    if show_plots:
+        plt.show()
+    plt.close()
 
-    print(f"[{CLASS_NAME}] Pixel-level ROC AUC: {pixel_auc:.4f}")
+    print(f"[{class_name}] Pixel-level ROC AUC: {pixel_auc:.4f}")
+
+
+def main() -> None:
+    run_baseline()
 
 
 if __name__ == "__main__":

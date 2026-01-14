@@ -12,6 +12,9 @@ manual_test/
 # Mac OS-specific storage files
 .DS_Store
 
+
+my_silly_notes.txt
+
 # vim
 *.swp
 *.swo

@@ -1,18 +1,30 @@
 # data.py
+from __future__ import annotations
+
 import os
 from glob import glob
 from pathlib import Path
+from typing import Optional, Tuple
 
 import numpy as np
 from PIL import Image
 
 import torch
+from torch import Tensor
 from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms as T
 
 
-class MVTecDataset(Dataset):
-    def __init__(self, root, class_name, split="train", transform=None):
+class MVTecDataset(Dataset[Tuple[Tensor, int, str]]):
+    """Minimal MVTec dataset wrapper that filters out non-"good" train images."""
+
+    def __init__(
+        self,
+        root: str | Path,
+        class_name: str,
+        split: str = "train",
+        transform: Optional[T.Compose] = None,
+    ) -> None:
         super().__init__()
         assert split in ["train", "test"]
         self.root = root
@@ -35,10 +47,10 @@ class MVTecDataset(Dataset):
         else:
             self.labels = [0] * len(self.image_paths)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.image_paths)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int) -> Tuple[Tensor, int, str]:
         img_path = self.image_paths[idx]
         img = Image.open(img_path).convert("RGB")
 
@@ -51,18 +63,29 @@ class MVTecDataset(Dataset):
         return img_t, label, img_path
 
 
-def build_transform(img_size: int):
-    return T.Compose([
-        T.Resize((img_size, img_size)),
-        T.ToTensor(),
-        T.Normalize(
-            mean=(0.485, 0.456, 0.406),
-            std=(0.229, 0.224, 0.225),
-        ),
-    ])
+def build_transform(img_size: int) -> T.Compose:
+    """Standard ImageNet normalization pipeline for ViT-sized inputs."""
+
+    return T.Compose(
+        [
+            T.Resize((img_size, img_size)),
+            T.ToTensor(),
+            T.Normalize(
+                mean=(0.485, 0.456, 0.406),
+                std=(0.229, 0.224, 0.225),
+            ),
+        ]
+    )
 
 
-def build_dataloaders(data_root: str, class_name: str, img_size: int, batch_size: int = 8):
+def build_dataloaders(
+    data_root: str | Path,
+    class_name: str,
+    img_size: int,
+    batch_size: int = 8,
+) -> Tuple[MVTecDataset, MVTecDataset, DataLoader[Tuple[Tensor, int, str]]]:
+    """Create train/test datasets plus a DataLoader for train (used to build memory bank)."""
+
     transform = build_transform(img_size)
 
     train_dataset = MVTecDataset(data_root, class_name, split="train", transform=transform)
@@ -72,18 +95,16 @@ def build_dataloaders(data_root: str, class_name: str, img_size: int, batch_size
         train_dataset,
         batch_size=batch_size,
         shuffle=False,
-        num_workers=0,      # Windows safe
+        num_workers=0,  # Windows safe
         pin_memory=True,
     )
 
     return train_dataset, test_dataset, train_loader
 
 
-def get_defect_type_from_path(path, class_name):
-    """
-    path: string or Path to a test image
-    returns: defect type string, e.g. 'color', 'cut', ... or 'good'
-    """
+def get_defect_type_from_path(path: str | Path, class_name: str) -> str:
+    """Return defect type extracted from test-path layout, or "good"/"unknown"."""
+
     p = Path(path)
     parts = p.parts
 
@@ -98,10 +119,14 @@ def get_defect_type_from_path(path, class_name):
     return "unknown"
 
 
-def load_ground_truth_mask(img_path, data_root, class_name, img_size):
-    """
-    returns: binary numpy array [img_size, img_size] with values 0/1, or None if good/no mask
-    """
+def load_ground_truth_mask(
+    img_path: str | Path,
+    data_root: str | Path,
+    class_name: str,
+    img_size: int,
+) -> Optional[np.ndarray]:
+    """Load resized binary ground-truth mask for a defective image, if present."""
+
     img_path = Path(img_path)
     defect_type = get_defect_type_from_path(img_path, class_name)
 

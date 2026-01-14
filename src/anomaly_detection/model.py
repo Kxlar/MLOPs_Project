@@ -1,9 +1,9 @@
 # model.py
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Tuple
 
 import sys
-from pathlib import Path
 
 current_file = Path(__file__).resolve()
 project_root = current_file.parents[2]
@@ -19,10 +19,8 @@ import torch.nn.functional as F
 from src.anomaly_detection.vision_transformer import vit_base
 
 
-def load_dinov3(weights_path: str, device: torch.device):
-    """
-    Loads DINOv3 using the Meta DinoVisionTransformer architecture.
-    """
+def load_dinov3(weights_path: str | Path, device: torch.device) -> nn.Module:
+    """Load DINOv3 weights into a Meta DinoVisionTransformer backbone."""
     # Use the exact argument names from DinoVisionTransformer.__init__
     model = vit_base(
         patch_size=16,
@@ -51,11 +49,9 @@ def load_dinov3(weights_path: str, device: torch.device):
 
 
 class DINOv3FeatureExtractor(nn.Module):
-    """
-    Transforms input from [B,3,H,W] -> [B,D,Hf,Wf]
-    """
+    """Transform input images into spatial patch embeddings [B, D, Hf, Wf]."""
 
-    def __init__(self, dino_model):
+    def __init__(self, dino_model: nn.Module) -> None:
         super().__init__()
         self.dino = dino_model
 
@@ -74,11 +70,10 @@ class DINOv3FeatureExtractor(nn.Module):
 
 
 @torch.no_grad()
-def build_memory_bank(feature_extractor: nn.Module, train_loader, device: torch.device):
-    """
-    Builds memory bank from train images (good only).
-    Returns tensor [N_mem, C] on device.
-    """
+def build_memory_bank(
+    feature_extractor: nn.Module, train_loader, device: torch.device
+) -> torch.Tensor:
+    """Build a normalized patch-memory bank [N_mem, C] from "good" train images."""
     memory_bank = []
 
     for imgs, labels, paths in train_loader:
@@ -104,12 +99,8 @@ def compute_anomaly_map(
     feature_extractor: nn.Module,
     memory_bank: torch.Tensor,
     k: int = 10,
-):
-    """
-    img_t: [3,H,W] (already transformed)
-    memory_bank: [N_mem,C] on same device
-    returns: anomaly_map torch.Tensor [Hf,Wf] on CPU
-    """
+) -> torch.Tensor:
+    """Compute patch-wise anomaly scores using k-NN distances to the memory bank."""
     img_t_batch = img_t.unsqueeze(0).to(memory_bank.device)
 
     feat = feature_extractor(img_t_batch)  # [1,C,Hf,Wf]
@@ -136,10 +127,7 @@ def reduce_anomaly_map(anomaly_map: torch.Tensor, mode: str = "max") -> float:
 
 
 def upsample_anomaly_map(anomaly_map: torch.Tensor, img_size: int) -> np.ndarray:
-    """
-    anomaly_map: torch.Tensor [Hf,Wf] CPU
-    returns: numpy array [img_size,img_size]
-    """
+    """Resize a low-res anomaly map [Hf, Wf] to image resolution as numpy."""
     am = anomaly_map.unsqueeze(0).unsqueeze(0)  # [1,1,Hf,Wf]
     am_up = F.interpolate(
         am,

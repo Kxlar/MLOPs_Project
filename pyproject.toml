@@ -29,6 +29,9 @@ dependencies = [
     "uvicorn==0.34.0",
 ]
 
+[project.scripts]
+anomaly-cli = "anomaly_detection.cli:app"
+
 [dependency-groups]
 dev = [
     "coverage==7.6.9",
