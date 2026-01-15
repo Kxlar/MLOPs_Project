@@ -7,13 +7,14 @@ RUN apt update && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
+WORKDIR /app
 COPY uv.lock uv.lock
 COPY pyproject.toml pyproject.toml
 COPY README.md README.md
 COPY src/ src/
 COPY data/ data/
+COPY models/ models/
 
-WORKDIR /
 RUN uv sync --locked --no-cache --no-install-project
 
 ENTRYPOINT ["uv", "run", "src/anomaly_detection/train.py"]
