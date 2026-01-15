@@ -9,6 +9,8 @@ manual_test/
 # other local dev info
 .vscode/
 
+my_silly_notes.txt
+
 # Mac OS-specific storage files
 .DS_Store
 
