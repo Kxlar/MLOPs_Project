@@ -44,6 +44,15 @@ def get_args():
 
 def main():
     args = get_args()
+    run(args)
+
+
+def run(args) -> None:
+    """Build and save the memory bank.
+
+    Kept as a separate function so Hydra can call the same logic.
+    """
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Device: {device}")
 
