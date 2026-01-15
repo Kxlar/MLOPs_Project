@@ -1,0 +1,23 @@
+# Hydra config for saving an augmented dataset to disk
+
+hydra:
+  job:
+    chdir: false
+
+data_root: ./data
+class_name: carpet
+img_size: 224
+batch_size: 8
+
+augment: true
+aug_types: [rotation, blur]
+aug_multiplier: 5
+
+rot_degrees: 10
+color_brightness: 0.2
+color_contrast: 0.2
+color_saturation: 0.2
+blur_kernel: 3
+
+# Where augmented images will be written to
+save_aug_path: ./data
