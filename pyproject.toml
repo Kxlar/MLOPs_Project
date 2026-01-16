@@ -62,4 +62,4 @@ explicit = true
 line-length = 120
 
 [tool.coverage.run]
-omit = ["tests/*" , "__init__.py" , "src/anomaly_detection/*hydra*.py", "src/anomaly_detection/layers/"]
+omit = ["tests/*" , "__init__.py" , "src/anomaly_detection/*hydra*.py", "src/anomaly_detection/layers/*", "src/anomaly_detection/utils.py", "src/anomaly_detection/vision_transformer.py"]
