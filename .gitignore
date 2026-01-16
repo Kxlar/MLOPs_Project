@@ -1,7 +1,8 @@
 docs/site/
 data/
 models/
-*.png 
+results/
+
 
 # test cache
 manual_test/
