@@ -33,13 +33,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # 1. Install project dependencies using uv
-          uv pip install --system -r requirements.txt
+          # Install dependencies defined in pyproject.toml
+          uv pip install --system -r pyproject.toml
 
-          # 2. Install testing tools
+          # Install testing tools
           uv pip install --system pytest pytest-cov scikit-learn
 
-          # 3. Install PyTorch CPU version
+          # Install PyTorch CPU
           uv pip install --system torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
       - name: Run tests with Coverage
