@@ -10,13 +10,13 @@
 - [X] Remember to comply with good coding practices (pep8) while doing the project (M7)
 - [X] Do a bit of code typing and remember to document essential parts of your code (M7)
 - [ ] Add command line interfaces and project commands to your code where it makes sense (M9)
-
+- [X] Use Hydra to load the configurations and manage your hyperparameters (M11)
 
 
 - [ ] Construct one or multiple docker files for your code (M10)
 - [ ] Build the docker files locally and make sure they work as intended (M10)
 - [ ] Write one or multiple configurations files for your experiments (M11)
-- [ ] Use Hydra to load the configurations and manage your hyperparameters (M11)
+
 - [ ] Use profiling to optimize your code (M12)
 - [ ] Use logging to log important events in your code (M14)
 - [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
