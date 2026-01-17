@@ -43,6 +43,15 @@ def get_args():
 
 def main():
     args = get_args()
+    run(args)
+
+
+def run(args) -> None:
+    """Evaluate image-level and pixel-level ROC/AUC.
+
+    Kept as a separate function so Hydra can call the same logic.
+    """
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     roc_dir = Path(args.output_dir) / args.class_name / "roc"
@@ -63,9 +72,7 @@ def main():
 
     for i in range(len(test_dataset)):
         img_t, label, _ = test_dataset[i]
-        anomaly_map = compute_anomaly_map(
-            img_t, feature_extractor, memory_bank, k=args.k
-        )
+        anomaly_map = compute_anomaly_map(img_t, feature_extractor, memory_bank, k=args.k)
 
         y_true.append(label)
         y_score_max.append(reduce_anomaly_map(anomaly_map, mode="max"))
@@ -93,23 +100,14 @@ def main():
     for i in range(len(test_dataset)):
         img_t, label, path = test_dataset[i]
 
-        # Skip good images for pixel ROC (convention in some datasets, but usually we need both.
-        # However, good images have no masks. If we include them, mask is all zeros).
-        # MVTec AD logic:
-
-        gt_mask = load_ground_truth_mask(
-            path, args.data_root, args.class_name, args.img_size
-        )
+        gt_mask = load_ground_truth_mask(path, args.data_root, args.class_name, args.img_size)
         if gt_mask is None:
-            # If image is good, mask is all zeros
             if label == 0:
                 gt_mask = np.zeros((args.img_size, args.img_size), dtype=np.uint8)
             else:
-                continue  # Should not happen if dataset is clean
+                continue
 
-        anomaly_map = compute_anomaly_map(
-            img_t, feature_extractor, memory_bank, k=args.k
-        )
+        anomaly_map = compute_anomaly_map(img_t, feature_extractor, memory_bank, k=args.k)
         am_up = upsample_anomaly_map(anomaly_map, args.img_size)
 
         pixel_y_true.append(gt_mask.flatten())
@@ -122,7 +120,6 @@ def main():
         pixel_auc = roc_auc_score(pixel_y_true, pixel_scores)
         print(f"Pixel-Level ROC AUC: {pixel_auc:.4f}")
 
-        # Plot ROC
         fpr, tpr, _ = roc_curve(pixel_y_true, pixel_scores)
         plt.figure()
         plt.plot(fpr, tpr, label=f"AUC = {pixel_auc:.4f}")

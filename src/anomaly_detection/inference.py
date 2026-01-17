@@ -30,7 +30,7 @@ def get_args():
     parser.add_argument(
         "--memory_bank_path", type=str, required=True, help="Path to .pt memory bank"
     )
-    parser.add_argument("--output_dir", type=str, default="./reports/figures")
+    parser.add_argument("--output_dir", type=str, default="./results/figures")
 
     parser.add_argument("--img_size", type=int, default=224)
     parser.add_argument("--batch_size", type=int, default=8)
@@ -70,6 +70,15 @@ def save_heatmap_and_overlay(img_path, am_up, img_size, out_heatmap, out_overlay
 
 def main():
     args = get_args()
+    run(args)
+
+
+def run(args) -> None:
+    """Run inference and save heatmaps/overlays.
+
+    Kept as a separate function so Hydra can call the same logic.
+    """
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # Setup Paths
@@ -95,13 +104,9 @@ def main():
     for i in range(len(test_dataset)):
         img_t, label, path = test_dataset[i]
 
-        # Compute map
-        anomaly_map = compute_anomaly_map(
-            img_t, feature_extractor, memory_bank, k=args.k
-        )
+        anomaly_map = compute_anomaly_map(img_t, feature_extractor, memory_bank, k=args.k)
         am_up = upsample_anomaly_map(anomaly_map, args.img_size)
 
-        # Save
         img_path = Path(path)
         base_name = img_path.stem
         label_str = "defect" if label == 1 else "good"

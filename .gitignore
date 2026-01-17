@@ -1,10 +1,15 @@
 docs/site/
 data/
 models/
-*.png 
+results/
+carpet/ 
+
 
 # test cache
 manual_test/
+
+my_silly_notes.txt
+
 
 # other local dev info
 .vscode/
