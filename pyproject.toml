@@ -25,6 +25,8 @@ dependencies = [
     "matplotlib>=3.10.8",
     "numpy>=2.0,<2.4",
     "pillow>=12.1.0",
+    "pydantic>=2.12.5",
+    "python-multipart>=0.0.21",
     "scikit-learn>=1.7.2",
     "torch==2.6.0",
     "torchvision==0.21.0",
