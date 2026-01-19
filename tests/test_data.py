@@ -1,17 +1,10 @@
-import pytest
-import numpy as np
-from pathlib import Path
-from PIL import Image
-import torch
 from argparse import Namespace
+from pathlib import Path
 
-import sys
-
-# Ensure project root is in path
-current_file = Path(__file__).resolve()
-project_root = current_file.parents[1]
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
+import numpy as np
+import pytest
+import torch
+from PIL import Image
 
 from src.anomaly_detection.data import (
     MVTecDataset,

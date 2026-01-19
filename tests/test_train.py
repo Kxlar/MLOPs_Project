@@ -1,15 +1,9 @@
 import sys
+from pathlib import Path
+from unittest.mock import MagicMock, patch
+
 import pytest
 import torch
-from pathlib import Path
-from unittest.mock import patch, MagicMock
-
-
-# Ensure project root is in path
-current_file = Path(__file__).resolve()
-project_root = current_file.parents[1]
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
 
 import src.anomaly_detection.train as train
 

@@ -1,17 +1,12 @@
 import sys
+from argparse import Namespace
+from pathlib import Path
+from unittest.mock import MagicMock, patch
+
+import numpy as np
 import pytest
 import torch
-import numpy as np
-from pathlib import Path
-from unittest.mock import patch, MagicMock
-from argparse import Namespace
 from PIL import Image
-
-# Ensure project root is in path
-current_file = Path(__file__).resolve()
-project_root = current_file.parents[2]
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
 
 # Import the module to test
 import src.anomaly_detection.inference as inference

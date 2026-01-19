@@ -1,16 +1,11 @@
 import sys
-import pytest
-import numpy as np
-import torch
-from unittest.mock import patch
 from argparse import Namespace
 from pathlib import Path
+from unittest.mock import patch
 
-# Ensure project root is in path
-current_file = Path(__file__).resolve()
-project_root = current_file.parents[2]
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
+import numpy as np
+import pytest
+import torch
 
 # Import module under test
 import src.anomaly_detection.evaluate as evaluate
@@ -153,6 +148,9 @@ def test_evaluation_pipeline_happy_path(
     # Verify paths of saved plots
     expected_dir = Path(mock_args.output_dir) / mock_args.class_name / "roc"
     call_args_list = mock_plt.savefig.call_args_list
+
+    # Ensure all saved files are inside the expected output directory
+    assert all(str(expected_dir) in str(c[0][0]) for c in call_args_list)
 
     # Check if histogram.png was saved
     assert any("histogram.png" in str(c[0][0]) for c in call_args_list)
