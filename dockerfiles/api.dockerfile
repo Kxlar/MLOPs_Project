@@ -21,6 +21,9 @@ RUN uv sync --locked --no-cache --no-install-project --no-dev
 COPY src/ src/
 COPY models/ models/
 
+# Copy the data directory in case the API needs to reconstruct the memory bank
+COPY data/ data/
+
 
 # 7. Expose the port the API runs on
 EXPOSE 8000
