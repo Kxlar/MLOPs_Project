@@ -39,7 +39,7 @@ class APIConfig:
         # Default values (can be overwritten by argparse)
         self.data_root = "./data"
         self.class_name = "carpet"
-        self.weights_path = "./models/dinov3_weights.pth"
+        self.weights_path = "./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth"
         self.memory_bank_path = "./models/memory_bank.pt"
         self.img_size = 224
         self.batch_size = 8
