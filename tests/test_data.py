@@ -1,5 +1,3 @@
-import os
-import shutil
 import pytest
 import numpy as np
 from pathlib import Path
