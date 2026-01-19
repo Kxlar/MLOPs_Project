@@ -21,9 +21,7 @@ def get_args():
     parser = argparse.ArgumentParser(description="Train: Build Memory Bank")
     parser.add_argument("--data_root", type=str, required=True)
     parser.add_argument("--class_name", type=str, required=True)
-    parser.add_argument(
-        "--weights_path", type=str, required=True, help="Path to DinoV3 weights"
-    )
+    parser.add_argument("--weights_path", type=str, required=True, help="Path to DinoV3 weights")
     parser.add_argument(
         "--save_path",
         type=str,
@@ -34,9 +32,7 @@ def get_args():
     # Data params matching data.py
     parser.add_argument("--img_size", type=int, default=224)
     parser.add_argument("--batch_size", type=int, default=8)
-    parser.add_argument(
-        "--augment", action="store_true"
-    )  # Usually False for building memory bank
+    parser.add_argument("--augment", action="store_true")  # Usually False for building memory bank
     parser.add_argument("--aug_types", nargs="+", default=[])
 
     return parser.parse_args()

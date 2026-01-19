@@ -256,9 +256,7 @@ def test_perfect_separation_metric_check(mock_args):
 @patch("src.anomaly_detection.evaluate.torch.load")
 @patch("src.anomaly_detection.evaluate.compute_anomaly_map")
 @patch("src.anomaly_detection.evaluate.reduce_anomaly_map")
-def test_directory_creation(
-    mock_reduce, mock_compute, mock_torch, mock_ext, mock_load, mock_data, mock_args
-):
+def test_directory_creation(mock_reduce, mock_compute, mock_torch, mock_ext, mock_load, mock_data, mock_args):
     """Verifies output folder structure."""
 
     # TIP: Intentionally make data loading fail.

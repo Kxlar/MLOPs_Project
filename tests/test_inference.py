@@ -89,15 +89,11 @@ def test_save_heatmap_and_overlay(dummy_image_file, tmp_path):
 
     with patch("src.anomaly_detection.inference.plt") as mock_plt:
         # Run function
-        inference.save_heatmap_and_overlay(
-            img_path, am_up, img_size, str(out_heatmap), str(out_overlay)
-        )
+        inference.save_heatmap_and_overlay(img_path, am_up, img_size, str(out_heatmap), str(out_overlay))
 
         # Verify Matplotlib calls
         assert mock_plt.figure.call_count == 2
-        assert (
-            mock_plt.imshow.call_count == 3
-        )  # 1 for heatmap, 2 for overlay (bg + alpha)
+        assert mock_plt.imshow.call_count == 3  # 1 for heatmap, 2 for overlay (bg + alpha)
         assert mock_plt.savefig.call_count == 2
         assert mock_plt.close.call_count == 2
 
@@ -111,9 +107,7 @@ def test_save_heatmap_and_overlay(dummy_image_file, tmp_path):
 @patch("src.anomaly_detection.inference.torch.load")
 @patch("src.anomaly_detection.inference.compute_anomaly_map")
 @patch("src.anomaly_detection.inference.upsample_anomaly_map")
-@patch(
-    "src.anomaly_detection.inference.save_heatmap_and_overlay"
-)  # Mocking the I/O part for the pipeline test
+@patch("src.anomaly_detection.inference.save_heatmap_and_overlay")  # Mocking the I/O part for the pipeline test
 def test_run_inference_pipeline(
     mock_save_viz,
     mock_upsample,
@@ -207,17 +201,14 @@ def test_gpu_handling(mock_args):
     """
     # 1. Force GPU detection to True
     with patch("torch.cuda.is_available", return_value=True):
-
         # 2. Spy on load_dinov3 to check which device it receives
         with patch("src.anomaly_detection.inference.load_dinov3") as mock_load:
-
             # 3. FIX: Prevent the data loader from crashing.
             # Make it return empty values so the script can continue.
             with patch(
                 "src.anomaly_detection.inference.build_dataloaders",
                 return_value=(None, [], None, None),
             ):
-
                 # 4. Force the NEXT step (FeatureExtractor) to fail
                 # to stop the script right after load_dinov3 has been called.
                 with patch(
@@ -230,9 +221,7 @@ def test_gpu_handling(mock_args):
                         pass
 
         # Verification
-        assert (
-            mock_load.called
-        ), "load_dinov3 should have been called before the exception"
+        assert mock_load.called, "load_dinov3 should have been called before the exception"
 
         args, _ = mock_load.call_args
         # The signature is load_dinov3(weights_path, device) -> args[1] is the device
