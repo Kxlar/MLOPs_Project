@@ -15,6 +15,9 @@ def export_model(weights_path, output_path="./models/dinov3_features.onnx"):
     dinov3_model = load_dinov3(weights_path, device)
     feature_extractor = DINOv3FeatureExtractor(dinov3_model).eval()
 
+    # Convert all model weights to standard float32 to avoid bfloat16 errors in ONNX
+    feature_extractor = feature_extractor.float()
+
     # 2. Create dummy input (Batch Size 1, 3 Channels, 224x224)
     dummy_input = torch.randn(1, 3, 224, 224, device=device)
 
