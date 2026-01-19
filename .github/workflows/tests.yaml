@@ -51,4 +51,4 @@ jobs:
           
           # Report coverage
           # Fail if coverage is below 80%
-          coverage report -m --fail-under=80
+          coverage report -m -i --fail-under=80
