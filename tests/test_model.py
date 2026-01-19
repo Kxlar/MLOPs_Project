@@ -15,7 +15,6 @@ if str(project_root) not in sys.path:
 
 import src.anomaly_detection.model as model_module
 from src.anomaly_detection.model import (
-    load_dinov3,
     DINOv3FeatureExtractor,
     build_memory_bank,
     compute_anomaly_map,
