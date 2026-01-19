@@ -63,6 +63,16 @@ explicit = true
 [tool.ruff]
 line-length = 120
 
+[tool.ruff.lint.per-file-ignores]
+"src/anomaly_detection/*_hydra.py" = ["E402"]
+"src/anomaly_detection/augment_hydra.py" = ["E402"]
+"src/anomaly_detection/evaluate.py" = ["E402"]
+"src/anomaly_detection/inference.py" = ["E402"]
+"src/anomaly_detection/model.py" = ["E402"]
+"src/anomaly_detection/train.py" = ["E402"]
+"src/anomaly_detection/vision_transformer.py" = ["E402"]
+"src/anomaly_detection/layers/__init__.py" = ["F401"]
+
 [tool.coverage.run]
 source = ["src/anomaly_detection"]
 omit = ["tests/*" , "__init__.py" , "src/anomaly_detection/*hydra*.py", "src/anomaly_detection/layers/*", "src/anomaly_detection/utils.py", "src/anomaly_detection/vision_transformer.py"]
