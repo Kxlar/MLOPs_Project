@@ -1,0 +1,16 @@
+# bentoml/bentofile.yaml
+service: "src.anomaly_detection.service:AnomalyDetector"
+labels:
+  owner: mlops-team15
+  project: anomaly-detection
+include:
+  - "./src"                       # Include the entire source code
+  - "./models/memory_bank.pt"     # Include the memory bank
+  - "./models/dinov3_features.onnx"      # Include the ONNX model
+python:
+  packages:
+    - numpy
+    - torch
+    - onnxruntime
+    - pillow
+    - matplotlib
