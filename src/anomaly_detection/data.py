@@ -63,7 +63,6 @@ def build_transform(img_size: int, args=None, is_saving=False):
 
     # Apply augmentations only if requested
     if args and args.augment and hasattr(args, "aug_types"):
-
         if "rotation" in args.aug_types:
             transforms.append(T.RandomRotation(degrees=args.rot_degrees))
 
@@ -99,12 +98,8 @@ def build_dataloaders(args):
     # Test transform: Resize + Norm (No augmentation)
     test_transform = build_transform(args.img_size, args=None, is_saving=False)
 
-    train_dataset = MVTecDataset(
-        args.data_root, args.class_name, split="train", transform=train_transform
-    )
-    test_dataset = MVTecDataset(
-        args.data_root, args.class_name, split="test", transform=test_transform
-    )
+    train_dataset = MVTecDataset(args.data_root, args.class_name, split="train", transform=train_transform)
+    test_dataset = MVTecDataset(args.data_root, args.class_name, split="test", transform=test_transform)
 
     train_loader = DataLoader(
         train_dataset,
@@ -174,13 +169,9 @@ def save_augmented_dataset(args):
     aug_transform = build_transform(args.img_size, args=args, is_saving=True)
 
     # Load raw dataset
-    dataset = MVTecDataset(
-        args.data_root, args.class_name, split="train", transform=None
-    )
+    dataset = MVTecDataset(args.data_root, args.class_name, split="train", transform=None)
 
-    output_dir = (
-        Path(args.save_aug_path) / f"{args.class_name}_augmented" / "train" / "good"
-    )
+    output_dir = Path(args.save_aug_path) / f"{args.class_name}_augmented" / "train" / "good"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     count = 0
@@ -211,9 +202,7 @@ def get_args():
 
     # Augmentation params
     parser.add_argument("--augment", action="store_true", help="Enable augmentation")
-    parser.add_argument(
-        "--aug_types", nargs="+", default=[], choices=["rotation", "color", "blur"]
-    )
+    parser.add_argument("--aug_types", nargs="+", default=[], choices=["rotation", "color", "blur"])
     parser.add_argument(
         "--aug_multiplier",
         type=int,
@@ -229,9 +218,7 @@ def get_args():
     parser.add_argument("--blur_kernel", type=int, default=3)
 
     # Save mode
-    parser.add_argument(
-        "--save_aug_path", type=str, default=None, help="Path to save augmented images"
-    )
+    parser.add_argument("--save_aug_path", type=str, default=None, help="Path to save augmented images")
 
     return parser.parse_args()
 

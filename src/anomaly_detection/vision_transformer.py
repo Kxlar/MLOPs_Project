@@ -18,7 +18,15 @@ import torch
 import torch.nn.init
 from torch import Tensor, nn
 
-from src.anomaly_detection.layers import LayerScale, Mlp, PatchEmbed, RMSNorm, RopePositionEmbedding, SelfAttentionBlock, SwiGLUFFN
+from src.anomaly_detection.layers import (
+    LayerScale,
+    Mlp,
+    PatchEmbed,
+    RMSNorm,
+    RopePositionEmbedding,
+    SelfAttentionBlock,
+    SwiGLUFFN,
+)
 from src.anomaly_detection.utils import named_apply
 
 logger = logging.getLogger("dinov3")

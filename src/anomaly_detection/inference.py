@@ -26,9 +26,7 @@ def get_args():
     parser.add_argument("--data_root", type=str, required=True)
     parser.add_argument("--class_name", type=str, required=True)
     parser.add_argument("--weights_path", type=str, required=True)
-    parser.add_argument(
-        "--memory_bank_path", type=str, required=True, help="Path to .pt memory bank"
-    )
+    parser.add_argument("--memory_bank_path", type=str, required=True, help="Path to .pt memory bank")
     parser.add_argument("--output_dir", type=str, default="./results/figures")
 
     parser.add_argument("--img_size", type=int, default=224)
