@@ -44,8 +44,7 @@ def test_prediction(args):
     print(f"Sending {args.image_path} to {api_url}...")
 
     # 2. Prepare Payload
-    # BentoML expects the field name 'image' matching the argument in service.py
-    files = {"image": file_obj}
+    files = {"file": file_obj}
 
     # 3. Send POST request
     try:
