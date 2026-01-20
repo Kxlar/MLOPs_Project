@@ -9,12 +9,18 @@ from types import SimpleNamespace
 
 import torch
 import numpy as np
+
+# Force Matplotlib to non-interactive mode
+import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+
 from PIL import Image
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from pydantic import BaseModel
 
-# --- 1. Setup Python Path ---
+# Setup Python Path
 current_file = Path(__file__).resolve()
 project_root = current_file.parents[2]
 if str(project_root) not in sys.path:
@@ -32,13 +38,13 @@ from src.anomaly_detection.model import (
 import torchvision.transforms as T
 
 
-# --- 2. Global Configuration & State ---
+# Global Configuration & State
 class APIConfig:
     def __init__(self):
         # Default values (can be overwritten by argparse)
         self.data_root = "./data"
         self.class_name = "carpet"
-        self.weights_path = "./models/dinov3_weights.pth"
+        self.weights_path = "./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth"
         self.memory_bank_path = "./models/memory_bank.pt"
         self.img_size = 224
         self.batch_size = 8
@@ -52,7 +58,7 @@ config = APIConfig()
 ml_models = {}
 
 
-# --- 3. Auto-Build Logic ---
+# Auto-Build Logic
 def run_auto_build(cfg: APIConfig, feature_extractor, device):
     """
     Automatically builds the memory bank if it is missing.
@@ -61,8 +67,6 @@ def run_auto_build(cfg: APIConfig, feature_extractor, device):
     print(f"[-] Memory bank not found at {cfg.memory_bank_path}")
     print("[-] Starting automatic build process...")
 
-    # Create a namespace object that looks like argparse args expected by data.py
-    # We set augment=False because we are building the bank (similar to train.py)
     mock_args = SimpleNamespace(
         data_root=cfg.data_root,
         class_name=cfg.class_name,
@@ -75,7 +79,6 @@ def run_auto_build(cfg: APIConfig, feature_extractor, device):
     try:
         # 1. Load Data
         print("    Loading training data...")
-        # build_dataloaders returns: train_ds, test_ds, train_loader, test_loader
         _, _, train_loader, _ = build_dataloaders(mock_args)
 
         # 2. Build Bank
@@ -96,7 +99,7 @@ def run_auto_build(cfg: APIConfig, feature_extractor, device):
         raise RuntimeError("Failed to auto-build memory bank. Check dataset path.") from e
 
 
-# --- 4. Lifespan (Startup/Shutdown) ---
+# Lifespan (Startup/Shutdown)
 @contextlib.asynccontextmanager
 async def lifespan(app: FastAPI):
     """
@@ -107,7 +110,6 @@ async def lifespan(app: FastAPI):
 
     # 1. Load Backbone (DINOv3)
     if not Path(config.weights_path).exists():
-        # We cannot auto-download proprietary/custom weights usually, so we raise error
         print(f"[!] Error: Weights file not found at {config.weights_path}")
         raise FileNotFoundError("DINOv3 weights missing.")
 
@@ -135,7 +137,7 @@ async def lifespan(app: FastAPI):
         torch.cuda.empty_cache()
 
 
-# --- 5. API Definition ---
+# API Definition
 app = FastAPI(title="Anomaly Detection API", lifespan=lifespan)
 
 
@@ -176,7 +178,20 @@ def generate_heatmap_base64(anomaly_map_up: np.ndarray, original_img_bytes: byte
     return base64.b64encode(buf.getvalue()).decode("utf-8")
 
 
-# --- 6. Endpoints ---
+# Endpoints
+@app.get("/health")
+def health_check():
+    """
+    Simple health check to verify the API is running and models are loaded.
+    """
+    return {
+        "status": "ok",
+        "device": str(config.device),
+        "models_loaded": "feature_extractor" in ml_models
+        and "memory_bank" in ml_models,
+    }
+
+
 @app.post("/predict", response_model=PredictionResponse)
 async def predict(file: UploadFile = File(...)):
     if "memory_bank" not in ml_models:
@@ -217,7 +232,7 @@ async def predict(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# --- 7. Entry Point & Argparse ---
+# Entry Point & Argparse
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the Anomaly Detection API")
 
@@ -258,6 +273,5 @@ if __name__ == "__main__":
     config.port = args.port
 
     # Run Uvicorn Programmatically
-    # This allows us to use the parsed args inside the app
     print(f"Starting server for class: {config.class_name}")
     uvicorn.run(app, host=config.host, port=config.port)
