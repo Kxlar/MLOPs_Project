@@ -4,7 +4,6 @@ import base64
 import contextlib
 import argparse
 import uvicorn
-import os
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -97,9 +96,7 @@ def run_auto_build(cfg: APIConfig, feature_extractor, device):
 
     except Exception as e:
         print(f"[!] Critical Error during auto-build: {e}")
-        raise RuntimeError(
-            "Failed to auto-build memory bank. Check dataset path."
-        ) from e
+        raise RuntimeError("Failed to auto-build memory bank. Check dataset path.") from e
 
 
 # Lifespan (Startup/Shutdown)
@@ -164,17 +161,9 @@ def transform_image_bytes(image_bytes: bytes, img_size: int) -> torch.Tensor:
     return transform(img)
 
 
-def generate_heatmap_base64(
-    anomaly_map_up: np.ndarray, original_img_bytes: bytes, img_size: int
-) -> str:
-    am_norm = (anomaly_map_up - anomaly_map_up.min()) / (
-        anomaly_map_up.max() - anomaly_map_up.min() + 1e-8
-    )
-    orig_img = (
-        Image.open(io.BytesIO(original_img_bytes))
-        .convert("RGB")
-        .resize((img_size, img_size))
-    )
+def generate_heatmap_base64(anomaly_map_up: np.ndarray, original_img_bytes: bytes, img_size: int) -> str:
+    am_norm = (anomaly_map_up - anomaly_map_up.min()) / (anomaly_map_up.max() - anomaly_map_up.min() + 1e-8)
+    orig_img = Image.open(io.BytesIO(original_img_bytes)).convert("RGB").resize((img_size, img_size))
 
     fig, ax = plt.subplots(1, 1, figsize=(4, 4))
     ax.imshow(orig_img)
@@ -206,9 +195,7 @@ def health_check():
 @app.post("/predict", response_model=PredictionResponse)
 async def predict(file: UploadFile = File(...)):
     if "memory_bank" not in ml_models:
-        raise HTTPException(
-            status_code=503, detail="System initializing or failed to load models."
-        )
+        raise HTTPException(status_code=503, detail="System initializing or failed to load models.")
 
     try:
         contents = await file.read()
@@ -250,12 +237,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the Anomaly Detection API")
 
     # Paths
-    parser.add_argument(
-        "--data_root", type=str, default="./data", help="Path to dataset root"
-    )
-    parser.add_argument(
-        "--class_name", type=str, default="carpet", help="MVTec class name"
-    )
+    parser.add_argument("--data_root", type=str, default="./data", help="Path to dataset root")
+    parser.add_argument("--class_name", type=str, default="carpet", help="MVTec class name")
     parser.add_argument(
         "--weights_path",
         type=str,
@@ -271,9 +254,7 @@ if __name__ == "__main__":
 
     # Model Params
     parser.add_argument("--img_size", type=int, default=224, help="Input image size")
-    parser.add_argument(
-        "--batch_size", type=int, default=8, help="Batch size for auto-building bank"
-    )
+    parser.add_argument("--batch_size", type=int, default=8, help="Batch size for auto-building bank")
 
     # Server Params
     parser.add_argument("--host", type=str, default="0.0.0.0")

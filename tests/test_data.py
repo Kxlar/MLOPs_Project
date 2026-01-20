@@ -1,17 +1,10 @@
-import pytest
-import numpy as np
-from pathlib import Path
-from PIL import Image
-import torch
 from argparse import Namespace
+from pathlib import Path
 
-import sys
-
-# Ensure project root is in path
-current_file = Path(__file__).resolve()
-project_root = current_file.parents[1]
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
+import numpy as np
+import pytest
+import torch
+from PIL import Image
 
 from src.anomaly_detection.data import (
     MVTecDataset,
@@ -65,9 +58,7 @@ def mock_mvtec_data(tmp_path):
     for i in range(2):
         img_name = f"{i:03d}.png"
         mask_name = f"{i:03d}_mask.png"
-        create_dummy_image(
-            root / class_name / "test" / "broken_large" / img_name, color=(255, 0, 0)
-        )
+        create_dummy_image(root / class_name / "test" / "broken_large" / img_name, color=(255, 0, 0))
 
         # Create a binary mask (L)
         mask = Image.new("L", (100, 100), 255)  # Defect everywhere for testing
@@ -248,9 +239,7 @@ def test_save_augmented_dataset(mock_args, tmp_path):
     save_augmented_dataset(mock_args)
 
     # Verification
-    expected_output_dir = (
-        output_root / f"{mock_args.class_name}_augmented" / "train" / "good"
-    )
+    expected_output_dir = output_root / f"{mock_args.class_name}_augmented" / "train" / "good"
     assert expected_output_dir.exists()
 
     files = list(expected_output_dir.glob("*.png"))
