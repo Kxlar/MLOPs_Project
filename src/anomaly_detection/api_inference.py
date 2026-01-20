@@ -7,7 +7,7 @@ from io import BytesIO
 from PIL import Image
 
 # 1. Configuration
-API_URL = "http://localhost:8000/predict"
+API_URL = "http://localhost:3000/predict"
 # Change this to an actual image path on your computer
 IMAGE_PATH = "./data/carpet/test/color/000.png"
 
