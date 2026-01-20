@@ -10,7 +10,7 @@ import base64
 import matplotlib.pyplot as plt
 
 
-# Define the service
+# Define the service ta mère
 @bentoml.service(
     name="anomaly_detection_service", resources={"cpu": "4"}, traffic={"timeout": 60}
 )

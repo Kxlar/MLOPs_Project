@@ -3,7 +3,7 @@ import sys
 import os
 from pathlib import Path
 
-# Add project root to path
+# Add project root to path ta mère
 sys.path.append(str(Path.cwd()))
 
 from src.anomaly_detection.model import load_dinov3, DINOv3FeatureExtractor
