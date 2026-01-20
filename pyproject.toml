@@ -51,6 +51,13 @@ dev = [
     "mkdocstrings-python==1.12.2",
 ]
 
+[project.optional-dependencies]
+frontend = [
+  "streamlit>=1.30",
+  "requests>=2.31",
+  "pillow>=10.0",
+]
+
 
 [tool.uv.sources]
 torch = [
