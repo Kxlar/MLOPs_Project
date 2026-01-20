@@ -7,6 +7,9 @@ from PIL import Image
 from pathlib import Path
 import io
 import base64
+import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
