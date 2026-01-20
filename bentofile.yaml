@@ -4,9 +4,9 @@ labels:
   owner: mlops-team15
   project: anomaly-detection
 include:
-  - "./src"                       # Include the entire source code
-  - "./models/memory_bank.pt"     # Include the memory bank
-  - "./models/dinov3_features.onnx"      # Include the ONNX model
+  - "src/"                       # Include the entire source code
+  - "models/memory_bank.pt"     # Include the memory bank
+  - "models/dinov3_features.onnx"      # Include the ONNX model
 python:
   packages:
     - numpy
