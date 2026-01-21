@@ -583,4 +583,4 @@ We implemeted a frontend for our API because we felt like it was nice to have a 
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
-Student s254145 was in charge of refactoring the DINOv3 repo to keep only mandatory scripts to run our model, CLI implementation, unit testing for data.py, model.py, train.py, inference.py and evaluate.py, both API backends (FastAPI and bentoML), ONNX conversion for bentoML, testing APIs and load testing. 
+Student s254145 was in charge of setting up the github repo and the initial cookiecutter template, refactoring the DINOv3 repo to keep only mandatory scripts to run our model, CLI implementation, unit testing for data.py, model.py, train.py, inference.py and evaluate.py, both API backends (FastAPI and bentoML), ONNX conversion for bentoML, testing APIs and load testing. 
