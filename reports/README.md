@@ -104,6 +104,9 @@ will check the repositories and the code to verify your answers.
 * [ ] Setup cloud monitoring of your instrumented application (M28)
 * [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
 * [x] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+* [x] Setup cloud monitoring of your instrumented application (M28)
+* [x] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
+* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 * [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
 * [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
 
@@ -264,7 +267,7 @@ We used branches but not PR in our project. In our group, each member had at lea
 >
 > Answer:
 
---- question 10 fill here ---
+We did not use DVC. It would have been beneficial to keep track of modifications in our dataset, for instance if using data augmentation or simply testing our model on new images.
 
 ### Question 11
 
@@ -379,7 +382,12 @@ We used branches but not PR in our project. In our group, each member had at lea
 >
 > Answer:
 
---- question 17 fill here ---
+We used:
+- Engine for constructing the memory bank used by our model
+- Bucket for storing data and the pretrained model and making those accessible online
+- Artifact registry for saving our docker images and deploying them with cloud run
+- Cloud run for deploying our APIs and for its metrics and monitoring/alert features
+
 
 ### Question 18
 
@@ -394,7 +402,7 @@ We used branches but not PR in our project. In our group, each member had at lea
 >
 > Answer:
 
---- question 18 fill here ---
+The compute engine has been used to build the memory bank. We tried constructing several VM with several hardware configurations (explored accelerators, how to get CUDA to work) and ended up using one on CPU with machine type e2-medium (2 vCPUs, 4 GB memory) as this was enough for our use and easy to create. We created the VM, cloned our git on it, downloaded our data and pretrained model, and run the code in a custom container.
 
 ### Question 19
 
@@ -403,7 +411,11 @@ We used branches but not PR in our project. In our group, each member had at lea
 >
 > Answer:
 
---- question 19 fill here ---
+Bucket screenshot:
+
+[![Bucket](figures/bucket.png)](figures/bucket.png)
+
+We stored our dataset and pretrained model in the bucket.
 
 ### Question 20
 
@@ -412,7 +424,11 @@ We used branches but not PR in our project. In our group, each member had at lea
 >
 > Answer:
 
---- question 20 fill here ---
+Registry screenshot:
+
+[![Registry](figures/registry.png)](figures/registry.png)
+
+We stored our different images for the backend and frontend of our application.
 
 ### Question 21
 
@@ -421,7 +437,11 @@ We used branches but not PR in our project. In our group, each member had at lea
 >
 > Answer:
 
---- question 21 fill here ---
+Build screenshot:
+
+[![Build](figures/build.png)](figures/build.png)
+
+There is not much to see as the images that we succesfully used were built locally and pushed into the repository. In particular, we did not use triggers to build images automatically as we encountered issues with github permissions and some errors the github repo's owner tried enabling .
 
 ### Question 22
 
@@ -436,7 +456,7 @@ We used branches but not PR in our project. In our group, each member had at lea
 >
 > Answer:
 
---- question 22 fill here ---
+We managed to build the memory bank that our model requires in the engine. We could also do it locally but this could let us use better hardware, which would be useful for more demanding needs.
 
 ## Deployment
 
@@ -499,7 +519,7 @@ For unit testing we used FastAPI's TestClient and to keep the tests focused on l
 >
 > Answer:
 
---- question 26 fill here ---
+We used Cloud Run SLOs feature to monitor both our frontend (with an availibility metric) and backend (with a latency metric) services. We then created alerts that are triggered when those metrics signal an issue in the application performances.
 
 ## Overall discussion of project
 
@@ -518,7 +538,8 @@ For unit testing we used FastAPI's TestClient and to keep the tests focused on l
 >
 > Answer:
 
---- question 27 fill here ---
+Group member s253047 used about 14% of the 50$, which represents 7.32$. The most expensive service was by far the compute engine (6.77$) probably due to the use of hardware during several experiments, then Cloud Run (0.47$), then others.
+The Cloud tasks were almost exclusively done using this google account so this basically represents the cost of the project.
 
 ### Question 28
 
@@ -565,7 +586,10 @@ We implemeted a frontend for our API because we felt like it was nice to have a 
 >
 > Answer:
 
---- question 30 fill here ---
+We had a few issues with conflicting virtual environment and repositories as we were not used to work with uv and specific template tools like cookiecutter. The difficulties were due to some bad project management such as having a project into an other (locally) but we managed cleaning up everything and using our .toml to manage our environments.
+
+Also we struggled with the Cloud as it was new to us, but the course's explanations in addition to some research online, the use of LLMs and discussions on Slack helped us solve most of our issues.
+We might still struggle a bit if we need to use a specific python version/pytorch/GPU configuration in a VM with Engine.
 
 ### Question 31
 
@@ -584,3 +608,5 @@ We implemeted a frontend for our API because we felt like it was nice to have a 
 > Answer:
 
 Student s254145 was in charge of setting up the github repo and the initial cookiecutter template, refactoring the DINOv3 repo to keep only mandatory scripts to run our model, CLI implementation, unit testing for data.py, model.py, train.py, inference.py and evaluate.py, both API backends (FastAPI and bentoML), ONNX conversion for bentoML, testing APIs and load testing. 
+
+I (s253047) was in charge of Google Cloud related tasks, like managing the bucket, artifact repository, using the Engine, deploying and monitoring the application with Cloud Run. I used gemini to help me on some docker and yaml files, some bash commands and Cloud manipulations (connecting frontend and backend Run services for instance). They call me cloud wizard. Also successfully killed than damn dependabot. They fear me.
