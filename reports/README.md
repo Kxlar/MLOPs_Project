@@ -172,7 +172,7 @@ We made this choice because we were already familiar with argparse, which allowe
 >
 > Answer:
 
-We managed dependencies using uv, with pyproject.toml and the lock file (uv.lock) to define the project dependencies. The virtual environment itself is not versioned and is listed in .gitignore. To reproduce the exact environment, a new team member only needs to have Python and uv installed, then clone the repository, create and activate a local virtual environment, and run uv sync, which installs the exact dependency versions specified in the lock file.
+We managed our project dependencies using uv, leveraging the pyproject.toml file along with the corresponding lock file (uv.lock) to explicitly define all required packages and their versions. The virtual environment itself is not versioned and is included in .gitignore to avoid unnecessary files in the repository. This setup ensures reproducibility: any new team member only needs to have Python and uv installed. After cloning the repository, they can create and activate a local virtual environment and run uv sync. This command installs the exact versions of all dependencies as specified in the lock file, guaranteeing a consistent and fully reproducible development environment across all machines. 
 
 ### Question 5
 
@@ -267,7 +267,7 @@ We used branches but not PR in our project. In our group, each member had at lea
 >
 > Answer:
 
-We did not use DVC. It would have been beneficial to keep track of modifications in our dataset, for instance if using data augmentation or simply testing our model on new images.
+We did not use DVC in this project. Incorporating DVC would have been highly beneficial, as it allows for versioning and tracking changes in our dataset over time. This would have been especially useful if we applied data augmentation techniques or needed to test our model on new images, ensuring that all modifications are recorded and reproducible. By using DVC, the team could easily go back to previous dataset versions, compare results across experiments, and maintain a clear history of how the data evolved. Overall, it provides better reproducibility and traceability in the workflow, which is essential for collaborative projects in general.
 
 ### Question 11
 
@@ -383,10 +383,10 @@ We did not use DVC. It would have been beneficial to keep track of modifications
 > Answer:
 
 We used:
-- Engine for constructing the memory bank used by our model
-- Bucket for storing data and the pretrained model and making those accessible online
-- Artifact registry for saving our docker images and deploying them with cloud run
-- Cloud run for deploying our APIs and for its metrics and monitoring/alert features
+Engine for constructing the memory bank used by our model,
+Bucket for storing data and the pretrained model and making those accessible online,
+Artifact registry for saving our docker images and deploying them with cloud run,
+Cloud run for deploying our APIs and for its metrics and monitoring/alert features.
 
 
 ### Question 18
@@ -402,7 +402,7 @@ We used:
 >
 > Answer:
 
-The compute engine has been used to build the memory bank. We tried constructing several VM with several hardware configurations (explored accelerators, how to get CUDA to work) and ended up using one on CPU with machine type e2-medium (2 vCPUs, 4 GB memory) as this was enough for our use and easy to create. We created the VM, cloned our git on it, downloaded our data and pretrained model, and run the code in a custom container.
+The Compute Engine was used to build the memory bank for our project. We experimented with constructing several virtual machines using different hardware configurations, exploring available accelerators and attempting to set up CUDA for GPU support. After testing, we decided to use a CPU-based VM with machine type e2-medium (2 vCPUs and 4 GB memory), as this configuration was sufficient for our needs and simple to set up. On this VM, we cloned our Git repository, downloaded the required data and pretrained model, and executed our code within a custom Docker container. This setup allowed us to maintain a controlled and reproducible environment while efficiently building the memory bank. 
 
 ### Question 19
 
@@ -456,7 +456,8 @@ There is not much to see as the images that we succesfully used were built local
 >
 > Answer:
 
-We managed to build the memory bank that our model requires in the engine. We could also do it locally but this could let us use better hardware, which would be useful for more demanding needs.
+We managed to build the memory bank required by our model using the Compute Engine. Although it would have been possible to construct it locally, using the cloud engine provided access to more powerful hardware and allowed us to better manage resources. This approach is particularly useful for larger datasets or more computationally demanding tasks, as it gives flexibility to experiment with different machine types and configurations. By using the cloud, we could ensure that the process was reproducible and isolated, while also enabling easier collaboration among team members who may not have equivalent local hardware. Overall, this setup provided a reliable and scalable environment for building the memory bank.
+
 
 ## Deployment
 
@@ -519,7 +520,7 @@ For unit testing we used FastAPI's TestClient and to keep the tests focused on l
 >
 > Answer:
 
-We used Cloud Run SLOs feature to monitor both our frontend (with an availibility metric) and backend (with a latency metric) services. We then created alerts that are triggered when those metrics signal an issue in the application performances.
+We used the Cloud Run SLOs feature to monitor both our frontend and backend services effectively. For the frontend, we tracked an availability metric, ensuring that the service remained responsive and accessible to users. For the backend, we monitored a latency metric, which allowed us to detect delays in processing requests or serving predictions. Based on these metrics, we created alerts that are automatically triggered whenever the defined thresholds are reached. This setup ensures that any performance degradation or downtime is immediately flagged, enabling the team to quickly respond and maintain the reliability and stability of the deployed application on Cloud Run.
 
 ## Overall discussion of project
 
@@ -540,6 +541,8 @@ We used Cloud Run SLOs feature to monitor both our frontend (with an availibilit
 
 Group member s253047 used about 14% of the 50$, which represents 7.32$. The most expensive service was by far the compute engine (6.77$) probably due to the use of hardware during several experiments, then Cloud Run (0.47$), then others.
 The Cloud tasks were almost exclusively done using this google account so this basically represents the cost of the project.
+
+We believe Cloud can be useful to benefit form Google's ressources, to work with data version control and to deploy an API online easily, also it seems relatively cheap. But depending on a remote service is a bit frustrating, and is probably an issue when working with confidential data.
 
 ### Question 28
 
@@ -590,8 +593,9 @@ We had a few issues with conflicting virtual environment and repositories as we 
 
 Also we struggled with the Cloud as it was new to us, but the course's explanations in addition to some research online, the use of LLMs and discussions on Slack helped us solve most of our issues.
 We might still struggle a bit if we need to use a specific python version/pytorch/GPU configuration in a VM with Engine.
+We had some issues with Cloud Run as well, when trying to deploy some services as we ran into errors when bad port management or insufficiant ressources. The error message was not very explicit, which made things hard to fix. this specific problem was documented in the course so this seems to be common. In general, error in the Cloud were difficult to understand.
 
-We believe Cloud can be useful to benefit form Google's ressources, to work with data version control and to deploy an API online easily, also it seems relatively cheap. But depending on a remote service is a bit frustrating, and is probably an issue when working with confidential data.
+Finally, we worked on our github management skills, encountering some issues with merging conflicts and authorizations, but some research online or using LLMs always helped us solving problems.
 
 ### Question 31
 
