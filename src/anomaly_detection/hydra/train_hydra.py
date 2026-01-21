@@ -7,7 +7,6 @@ import hydra
 from omegaconf import DictConfig
 
 
-
 current_file = Path(__file__).resolve()
 project_root = current_file.parents[2]
 if str(project_root) not in sys.path:

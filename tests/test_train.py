@@ -1,15 +1,9 @@
 import sys
+from pathlib import Path
+from unittest.mock import MagicMock, patch
+
 import pytest
 import torch
-from pathlib import Path
-from unittest.mock import patch, MagicMock
-
-
-# Ensure project root is in path
-current_file = Path(__file__).resolve()
-project_root = current_file.parents[1]
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
 
 import src.anomaly_detection.train as train
 
@@ -106,9 +100,7 @@ class TestTrainPipeline:
         mock_extractor_instance = MagicMock()
         mock_extractor_cls.return_value = mock_extractor_instance
         # Chain calls: extractor.eval().to(device)
-        mock_extractor_instance.eval.return_value.to.return_value = (
-            mock_extractor_instance
-        )
+        mock_extractor_instance.eval.return_value.to.return_value = mock_extractor_instance
 
         # Mock Memory Bank
         expected_bank_shape = (100, 384)
@@ -155,9 +147,7 @@ class TestTrainPipeline:
     @patch("src.anomaly_detection.train.DINOv3FeatureExtractor")
     @patch("src.anomaly_detection.train.build_memory_bank")
     @patch("torch.save")
-    def test_run_device_selection(
-        self, mock_save, mock_bank, mock_ext, mock_load, mock_data, mock_args
-    ):
+    def test_run_device_selection(self, mock_save, mock_bank, mock_ext, mock_load, mock_data, mock_args):
         """
         Edge case: Verify device logic (CPU vs CUDA).
         Since we cannot force CUDA in a CI environment easily, we check if logic is executed.
