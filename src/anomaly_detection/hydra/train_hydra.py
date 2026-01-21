@@ -13,7 +13,7 @@ project_root = current_file.parents[2]
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from src.anomaly_detection.hydra_utils import cfg_to_namespace
+from src.anomaly_detection.hydra.hydra_utils import cfg_to_namespace
 from src.anomaly_detection.train import run
 
 

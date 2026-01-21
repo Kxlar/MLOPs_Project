@@ -1,6 +1,6 @@
 # Hydra config for building the memory bank ("training")
 # Override any value from CLI, e.g.:
-#   uv run src/anomaly_detection/train_hydra.py data_root=./data class_name=carpet batch_size=16
+#   uv run src/anomaly_detection/hydra/train_hydra.py data_root=./data class_name=carpet batch_size=16
 
 # Keep cwd stable (Hydra otherwise runs in outputs/...)
 hydra:

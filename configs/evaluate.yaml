@@ -1,6 +1,6 @@
 # Hydra config for evaluation (ROC/AUC)
 # Example override:
-#   uv run src/anomaly_detection/evaluate_hydra.py k=5 output_dir=./results
+#   uv run src/anomaly_detection/hydra/evaluate_hydra.py k=5 output_dir=./results
 
 hydra:
   job:
