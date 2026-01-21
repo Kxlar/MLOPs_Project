@@ -96,9 +96,9 @@ class AnomalyDetector:
         return base64.b64encode(buf.getvalue()).decode("utf-8")
 
     @bentoml.api
-    def predict(self, image: Image.Image) -> dict:
+    def predict(self, file: Image.Image) -> dict:
         # 1. Preprocess
-        img_input = self.transform_image(image)  # Returns numpy [1, 3, 224, 224]
+        img_input = self.transform_image(file)  # Returns numpy [1, 3, 224, 224]
 
         # 2. ONNX Inference
         input_name = self.ort_session.get_inputs()[0].name
@@ -115,7 +115,7 @@ class AnomalyDetector:
         threshold = 0.65
 
         # 5. Visuals
-        heatmap = self.generate_heatmap_b64(anomaly_map, image)
+        heatmap = self.generate_heatmap_b64(anomaly_map, file)
 
         return {
             "anomaly_score": round(score, 4),
