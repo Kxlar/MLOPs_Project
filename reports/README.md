@@ -66,9 +66,9 @@ will check the repositories and the code to verify your answers.
 * [x] Add command line interfaces and project commands to your code where it makes sense (M9)
 * [x] Construct one or multiple docker files for your code (M10)
 * [x] Build the docker files locally and make sure they work as intended (M10)
-* [ ] Write one or multiple configurations files for your experiments (M11)
-* [ ] Used Hydra to load the configurations and manage your hyperparameters (M11)
-* [ ] Use profiling to optimize your code (M12)
+* [x] Write one or multiple configurations files for your experiments (M11)
+* [x] Used Hydra to load the configurations and manage your hyperparameters (M11)
+* [x] Use profiling to optimize your code (M12)
 * [ ] Use logging to log important events in your code (M14)
 * [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
 * [ ] Consider running a hyperparameter optimization sweep (M14)
@@ -76,10 +76,10 @@ will check the repositories and the code to verify your answers.
 
 ### Week 2
 
-* [ ] Write unit tests related to the data part of your code (M16)
-* [ ] Write unit tests related to model construction and or model training (M16)
-* [ ] Calculate the code coverage (M16)
-* [ ] Get some continuous integration running on the GitHub repository (M17)
+* [x] Write unit tests related to the data part of your code (M16)
+* [x] Write unit tests related to model construction and or model training (M16)
+* [x] Calculate the code coverage (M16)
+* [x] Get some continuous integration running on the GitHub repository (M17)
 * [ ] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
 * [ ] Add a linting step to your continuous integration (M17)
 * [ ] Add pre-commit hooks to your version control setup (M18)
@@ -88,22 +88,22 @@ will check the repositories and the code to verify your answers.
 * [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
 * [x] Get your model training in GCP using either the Engine or Vertex AI (M21)
-* [ ] Create a FastAPI application that can do inference using your model (M22)
-* [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
-* [ ] Write API tests for your application and setup continues integration for these (M24)
-* [ ] Load test your application (M24)
-* [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
-* [ ] Create a frontend for your API (M26)
+* [x] Create a FastAPI application that can do inference using your model (M22)
+* [x] Deploy your model in GCP using either Functions or Run as the backend (M23)
+* [x] Write API tests for your application and setup continues integration for these (M24)
+* [x] Load test your application (M24)
+* [x] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
+* [x] Create a frontend for your API (M26)
 
 ### Week 3
 
-* [ ] Check how robust your model is towards data drifting (M27)
-* [ ] Setup collection of input-output data from your deployed application (M27)
+* [x] Check how robust your model is towards data drifting (M27)
+* [x] Setup collection of input-output data from your deployed application (M27)
 * [ ] Deploy to the cloud a drift detection API (M27)
 * [ ] Instrument your API with a couple of system metrics (M28)
 * [ ] Setup cloud monitoring of your instrumented application (M28)
 * [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
-* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+* [x] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 * [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
 * [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
 
@@ -111,10 +111,10 @@ will check the repositories and the code to verify your answers.
 
 * [ ] Write some documentation for your application (M32)
 * [ ] Publish the documentation to GitHub Pages (M32)
-* [ ] Revisit your initial project description. Did the project turn out as you wanted?
+* [x] Revisit your initial project description. Did the project turn out as you wanted?
 * [ ] Create an architectural diagram over your MLOps pipeline
-* [ ] Make sure all group members have an understanding about all parts of the project
-* [ ] Uploaded all your code to GitHub
+* [x] Make sure all group members have an understanding about all parts of the project
+* [x] Uploaded all your code to GitHub
 
 ## Group information
 
@@ -185,7 +185,7 @@ We managed dependencies using uv, with pyproject.toml and the lock file (uv.lock
 >
 > Answer:
 
---- question 5 fill here ---
+From the cookiecutter template we have filled out almost every folder execpt notebook and devcontainer. In src/anomaly_detection/ we've added a layers folder that contains code scraped from the DINOv3 github repo that we need to run our model, a hydra folder for our hydra experiments and an api folder that contains both fastAPI and bentoml backends as well as the frontend script. In the models folder we save the weights of our model, the memory bank generated by train.py and an onnx version of our model. 
 
 ### Question 6
 
@@ -219,7 +219,7 @@ We managed dependencies using uv, with pyproject.toml and the lock file (uv.lock
 >
 > Answer:
 
---- question 7 fill here ---
+We've implemented tests for our data, model, training, inference and evaluation consisting in total of 34 tests mainly unit tests and pipeline logic tests. Testing our data mainly consists of creating a mock dataset and try loading it. For our model and training we used patches to simulate loading and using the model without heavy calculation. 
 
 ### Question 8
 
@@ -234,7 +234,7 @@ We managed dependencies using uv, with pyproject.toml and the lock file (uv.lock
 >
 > Answer:
 
---- question 8 fill here ---
+The total code coverage of code is X%, which includes most of our source code. We didn't implemented tests for service.py which is the bentoml backend of the api, the hydra files, code from the DINOv3 repo and export_onnx_paranoid. We tried to have good code coverage for the most important scripts of our project. 
 
 ### Question 9
 
@@ -249,7 +249,7 @@ We managed dependencies using uv, with pyproject.toml and the lock file (uv.lock
 >
 > Answer:
 
---- question 9 fill here ---
+We used branches but not PR in our project. In our group, each member had at least one branch that was kept up to date with main using merge and they were used to work on new features without disturbing others. Once someone had a feature working they went back to main and merged their branch. Then, they could go back to their branch, updating it by merging main and continue working.
 
 ### Question 10
 
@@ -453,7 +453,7 @@ We managed dependencies using uv, with pyproject.toml and the lock file (uv.lock
 >
 > Answer:
 
---- question 23 fill here ---
+We managed to write 2 API for our model. First we used FastAPI as a first version of the backend of our app to do inference with: taking a .png file from a user and running our model. Then we implemented a bentoML version of the API as a replacement for FastAPI. Both backends uses a conversion of the infered image to a string in base64 to be more efficient. Our model relies on a memory_bank.pt file to run so in case this file doesn't exist our API is able to run train.py to build a memory_bank from scratch ensuring that the API won't crash. 
 
 ### Question 24
 
@@ -469,7 +469,7 @@ We managed dependencies using uv, with pyproject.toml and the lock file (uv.lock
 >
 > Answer:
 
---- question 24 fill here ---
+We succesfully deployed both FastAPI and bentoML locally and containerized them into docker container backend.dockerfile for FastAPI and for bentoML built a bento then containerize it into an auto docker build. Afterwards we implemented a frontend for the API and deployed it in the cloud using ... . To invoke the service we used api_inference.py so a user would use *'uv run src/anomaly_detection/api_inference.py --image_path --host --port'* and the infered image is shown using matplotlib. 
 
 ### Question 25
 
@@ -484,7 +484,7 @@ We managed dependencies using uv, with pyproject.toml and the lock file (uv.lock
 >
 > Answer:
 
---- question 25 fill here ---
+For unit testing we used FastAPI's TestClient and to keep the tests focused on logic we used patch from unittest.mock to avoid loading our actual model. For load testing we used Locust to simulate user traffic. Our HttpUser class continuously sends POST requests to the inference endpoint with wait times simulated between 1s and 5s. For our FastAPI, over 78 users, we observed a median response time of 3800ms and a spike of 7400ms at the 95th percentile. For our bentoml api, over 89 users, we've got a similar median and a peak at 4400ms. These high latencies indicate that while the service is stable, the current CPU-based inference is a bottleneck, also the adaptative batching from bentoml proved to be very efficient, almost reducing by half the peak latency.
 
 ### Question 26
 
@@ -534,7 +534,7 @@ We managed dependencies using uv, with pyproject.toml and the lock file (uv.lock
 >
 > Answer:
 
---- question 28 fill here ---
+We implemeted a frontend for our API because we felt like it was nice to have a complete website to interact with. The frontend was implemented using streamlit and consists of one main page where the user can upload their image for anomaly detection and then once the image is selected, the infered heatmap is displayed. We also implemented a data drifting demo consisting of a docker image that automatically apply data augmentation to simulate data drifting, then performs inference on the old memory bank and the updated one, and evaluate both infered datasets to show 2 histograms showing how separable the drifted data are.  
 
 ### Question 29
 
@@ -583,4 +583,4 @@ We managed dependencies using uv, with pyproject.toml and the lock file (uv.lock
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
---- question 31 fill here ---
+Student s254145 was in charge of refactoring the DINOv3 repo to keep only mandatory scripts to run our model, CLI implementation, unit testing for data.py, model.py, train.py, inference.py and evaluate.py, both API backends (FastAPI and bentoML), ONNX conversion for bentoML, testing APIs and load testing. 
