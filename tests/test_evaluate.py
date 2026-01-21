@@ -1,9 +1,8 @@
 import sys
-import os
 import pytest
 import numpy as np
 import torch
-from unittest.mock import patch, MagicMock, call
+from unittest.mock import patch
 from argparse import Namespace
 from pathlib import Path
 

@@ -1,14 +1,12 @@
 # data.py
 import os
 import argparse
-import shutil
 from glob import glob
 from pathlib import Path
 
 import numpy as np
 from PIL import Image
 
-import torch
 from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms as T
 

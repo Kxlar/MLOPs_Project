@@ -1,9 +1,7 @@
 # model.py
 from pathlib import Path
-from typing import Tuple
 
 import sys
-from pathlib import Path
 
 current_file = Path(__file__).resolve()
 project_root = current_file.parents[2]
