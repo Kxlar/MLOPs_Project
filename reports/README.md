@@ -591,6 +591,8 @@ We had a few issues with conflicting virtual environment and repositories as we 
 Also we struggled with the Cloud as it was new to us, but the course's explanations in addition to some research online, the use of LLMs and discussions on Slack helped us solve most of our issues.
 We might still struggle a bit if we need to use a specific python version/pytorch/GPU configuration in a VM with Engine.
 
+We believe Cloud can be useful to benefit form Google's ressources, to work with data version control and to deploy an API online easily, also it seems relatively cheap. But depending on a remote service is a bit frustrating, and is probably an issue when working with confidential data.
+
 ### Question 31
 
 > **State the individual contributions of each team member. This is required information from DTU, because we need to**
