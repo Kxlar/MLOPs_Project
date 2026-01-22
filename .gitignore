@@ -191,3 +191,8 @@ outputs/
 site/
 build/
 docs/build/
+
+# MkDocs build output
+site/
+build/
+docs/build/
