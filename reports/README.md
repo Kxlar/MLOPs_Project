@@ -241,7 +241,7 @@ In total, we implemented 34 tests covering unit logic, integration pipelines, an
 >
 > Answer:
 
-The total code coverage of code is X%, which includes most of our source code. We didn't implemented tests for service.py which is the bentoml backend of the api, the hydra files, code from the DINOv3 repo and export_onnx_paranoid. We tried to have good code coverage for the most important scripts of our project.
+The total code coverage of our code is 79% (this only takes into account python scripts for which we wrote tests), which includes most of our source code. We didn't implemented tests for service.py which is the bentoml backend of the api, the hydra files, code from the DINOv3 repo, export_onnx_paranoid and data_drift_demo.py. We tried to have good code coverage for the most important scripts of our project. Among the tested scripts, the coverage is 78% for data.py, 69% for evaluate.py, 74% for inference.py, 99% for model.py, 95% for train.py.
 
 ### Question 9
 
