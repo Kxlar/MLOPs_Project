@@ -8,7 +8,7 @@ It assumes no prior knowledge of the codebase.
 
 ## 1. System Requirements
 
-- Linux / macOS / Windows  
+- Linux / macOS / Windows
   *(Windows users should use WSL)*
 - Python ≥ 3.9 (3.13 recommended)
 - Docker
@@ -85,7 +85,7 @@ uv run invoke --list
 
 ## 4. Minimal End-to-End Run
 
-### 4.1 Data loading: 
+### 4.1 Data loading:
 The project expects the MVTec AD dataset in the following structure:
 
 

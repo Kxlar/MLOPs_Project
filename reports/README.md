@@ -504,7 +504,7 @@ We managed to write 2 API for our model. First we used FastAPI as a first versio
 >
 > Answer:
 
-We succesfully deployed both FastAPI and bentoML locally and containerized them into docker container: backend.dockerfile for FastAPI, for bentoML we built a bento then containerize it into an auto docker build. Afterwards we implemented a frontend for the API and deployed it in the cloud using two different services on GCP: one for backend (bentoML) and one for frontend. Our app is available at https://frontend-445436263618.europe-west1.run.app/. To use the service we call api_inference.py so a user would use *'uv run src/anomaly_detection/api_inference.py --image_path --host --port'* and the infered image is shown using matplotlib. 
+We succesfully deployed both FastAPI and bentoML locally and containerized them into docker container: backend.dockerfile for FastAPI, for bentoML we built a bento then containerize it into an auto docker build. Afterwards we implemented a frontend for the API and deployed it in the cloud using two different services on GCP: one for backend (bentoML) and one for frontend. Our app is available at https://frontend-445436263618.europe-west1.run.app/. To use the service we call api_inference.py so a user would use *'uv run src/anomaly_detection/api_inference.py --image_path --host --port'* and the infered image is shown using matplotlib.
 
 ### Question 25
 

@@ -81,4 +81,3 @@ uv run pytest
 
 # Simulates 10 users sending requests
 locust -f ./tests/test_api_load_perf.py --headless -u 10 -r 1 -t 1m --host http://localhost:8000
-

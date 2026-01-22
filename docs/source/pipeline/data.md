@@ -1,6 +1,6 @@
 
 
-This project uses the **MVTec AD** dataset. 
+This project uses the **MVTec AD** dataset.
 
 ## 1. Downloading Dataset
 Our dataset can be downloaded from the cloud
@@ -67,4 +67,3 @@ uv run python src/anomaly_detection/data.py \
   --batch_size 8
 
 ```
-

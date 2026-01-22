@@ -14,9 +14,7 @@ import matplotlib.pyplot as plt
 
 
 # Define the service ta mère
-@bentoml.service(
-    name="anomaly_detection_service", resources={"cpu": "4"}, traffic={"timeout": 60}
-)
+@bentoml.service(name="anomaly_detection_service", resources={"cpu": "4"}, traffic={"timeout": 60})
 class AnomalyDetector:
     def __init__(self):
         # 1. Load Memory Bank (Standard PyTorch Tensor)
@@ -66,9 +64,7 @@ class AnomalyDetector:
 
         return anomaly_map.cpu()
 
-    def generate_heatmap_b64(
-        self, anomaly_map: torch.Tensor, original_img: Image.Image
-    ):
+    def generate_heatmap_b64(self, anomaly_map: torch.Tensor, original_img: Image.Image):
         # Upsample
         am = anomaly_map.unsqueeze(0).unsqueeze(0)
         am_up = F.interpolate(
