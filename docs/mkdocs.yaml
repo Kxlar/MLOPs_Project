@@ -1,5 +1,5 @@
-site_name: anomaly_detection
-site_author: Team15
+site_name: Anomaly Detection (MVTec)
+site_author: Team 15
 docs_dir: source
 
 theme:
@@ -19,6 +19,43 @@ plugins:
             separate_signature: true
             show_signature_annotations: true
 
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
 nav:
   - Home: index.md
+  - Getting Started: getting-started.md
+  - Pipeline:
+      - Data: pipeline/data.md
+      - Train: pipeline/train.md
+      - Inference: pipeline/inference.md
+      - Evaluation: pipeline/evaluation.md
+  - Deployment:
+      - Docker: deployment/docker.md
+      - API (FastAPI): deployment/api.md
+      - Frontend: deployment/frontend.md
+      - Cloud (GCP): deployment/cloud.md
+  - MLOps Checklist:
+      - Week 1: mlops/week1.md
+      - Week 2: mlops/week2.md
+      - Week 3: mlops/week3.md
+  - Development:
+      - Tests: development/tests.md
+      - CI/CD: development/ci.md
+      - Style & Linting: development/style.md
+      - Hydra: development/hydra.md
+      - Profiling: development/profiling.md
+      - Logging: development/logging.md
   - API Reference: my_api.md
