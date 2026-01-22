@@ -24,6 +24,17 @@ git clone <REPO_URL>
 cd MLOPs_Project
 ```
 
+## 3. Data and Pre-trained model
+Downloads the data and the pretrained model from GCP bucket
+
+```bash
+chmod +x setup.sh
+```
+```bash
+./setup.sh
+```
+
+
 Install dependencies:
 ```bash
 uv sync
@@ -32,6 +43,10 @@ Verify installation:
 ```bash
 uv run python -c "import torch; print('OK')"
 ```
+
+
+
+
 ## 3. Project Structure
 ```text
 src/anomaly_detection/
