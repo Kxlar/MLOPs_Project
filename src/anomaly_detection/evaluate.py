@@ -5,15 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import torch
 from sklearn.metrics import roc_auc_score, roc_curve
-
-# ---- Logging setup ----
-
 from loguru import logger
-
-logger.remove()
-logger.add(sys.stderr, level="INFO")
-logger.add("logs/eval_{time}.log", rotation="10 MB", retention="7 days", level="INFO")
-
 
 # Ensure project root is in path
 current_file = Path(__file__).resolve()
@@ -29,6 +21,19 @@ from src.anomaly_detection.model import (
     reduce_anomaly_map,
     upsample_anomaly_map,
 )
+
+
+def setup_logger() -> None:
+    Path("logs").mkdir(parents=True, exist_ok=True)
+
+    logger.remove()
+    logger.add(sys.stderr, level="INFO")
+    logger.add(
+        "logs/evaluate_{time}.log",
+        rotation="10 MB",
+        retention="7 days",
+        level="INFO",
+    )
 
 
 def get_args():
@@ -59,19 +64,30 @@ def get_args():
 
 
 def main():
+    setup_logger()
     args = get_args()
 
-    # loggings
-    logger.info("Starting evaluation")
-    logger.info(f"class_name={args.class_name} output_dir={args.output_dir}")
-    logger.info(f"img_size={args.img_size} batch_size={args.batch_size} k={args.k}")
-    logger.info(f"scores_jsonl={args.scores_jsonl} hist_only={args.hist_only}")
-    logger.info(f"data_root={args.data_root} weights_path={args.weights_path} memory_bank_path={args.memory_bank_path}")
+    log = logger.bind(
+        class_name=args.class_name,
+        output_dir=args.output_dir,
+        img_size=args.img_size,
+        batch_size=args.batch_size,
+        k=args.k,
+        scores_jsonl=args.scores_jsonl,
+        hist_only=args.hist_only,
+    )
 
-    run(args)
+    log.info("Starting evaluation")
+
+    try:
+        run(args, log)
+        log.success("Evaluation completed")
+    except Exception:
+        log.exception("Evaluation failed")
+        raise
 
 
-def run(args) -> None:
+def run(args, log=logger) -> None:
     """Evaluate image-level and pixel-level ROC/AUC.
 
     Kept as a separate function so Hydra can call the same logic.
@@ -104,9 +120,9 @@ def run(args) -> None:
         # Compute AUC if both classes are present
         if len(np.unique(y_true)) > 1:
             auc_val = roc_auc_score(y_true, y_score_max)
-            print(f"Image-Level ROC AUC (from scores): {auc_val:.4f}")
+            log.info("Image-Level ROC AUC (from scores): {:.4f}", auc_val)
         else:
-            print("Only one class present in scores; skipping AUC.")
+            log.warning("Only one class present in scores; skipping AUC.")
 
         # Plot Histogram
         plt.figure()
@@ -117,7 +133,7 @@ def run(args) -> None:
         plt.savefig(roc_dir / "histogram.png")
         plt.close()
 
-        print(f"Saved histogram to {roc_dir / 'histogram.png'}")
+        log.info("Saved histogram to {}", roc_dir / "histogram.png")
         return
 
     if args.data_root is None or args.weights_path is None or args.memory_bank_path is None:
@@ -136,7 +152,7 @@ def run(args) -> None:
     memory_bank = torch.load(args.memory_bank_path, map_location=device)
 
     # --- Image Level Evaluation ---
-    print("Running Image-Level Evaluation...")
+    log.info("Running Image-Level Evaluation...")
     y_true = []
     y_score_max = []
 
@@ -151,7 +167,7 @@ def run(args) -> None:
     y_score_max = np.array(y_score_max)
 
     auc_val = roc_auc_score(y_true, y_score_max)
-    print(f"Image-Level ROC AUC: {auc_val:.4f}")
+    log.info("Image-Level ROC AUC: {:.4f}", auc_val)
 
     # Plot Histogram
     plt.figure()
@@ -163,9 +179,9 @@ def run(args) -> None:
     plt.close()
 
     # --- Pixel Level Evaluation ---
-    print("Running Pixel-Level Evaluation...")
+    log.info("Running Pixel-Level Evaluation...")
     if args.hist_only:
-        print("hist_only enabled; skipping pixel evaluation.")
+        log.info("hist_only enabled; skipping pixel evaluation.")
         return
 
     pixel_y_true = []
@@ -192,7 +208,7 @@ def run(args) -> None:
         pixel_scores = np.concatenate(pixel_scores)
 
         pixel_auc = roc_auc_score(pixel_y_true, pixel_scores)
-        print(f"Pixel-Level ROC AUC: {pixel_auc:.4f}")
+        log.info("Pixel-Level ROC AUC: {:.4f}", pixel_auc)
 
         fpr, tpr, _ = roc_curve(pixel_y_true, pixel_scores)
         plt.figure()
@@ -203,7 +219,7 @@ def run(args) -> None:
         plt.savefig(roc_dir / "pixel_roc.png")
         plt.close()
     else:
-        print("No masks found, skipping pixel evaluation.")
+        log.warning("No masks found, skipping pixel evaluation.")
 
 
 if __name__ == "__main__":
