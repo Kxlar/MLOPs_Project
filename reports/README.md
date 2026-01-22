@@ -348,7 +348,17 @@ We did not use DVC in this project. Incorporating DVC would have been highly ben
 >
 > Answer:
 
---- question 15 fill here ---
+Docker was used in our project to ensure reproducibility across different environments, from local development to cloud deployment (the images being saved in the artifact registry then used in either a VM with Engine or a Run service). We created container images for data loading, creating the memory bank and evaluation. We also have docker images for both the frontend application and the backend inference service. The backend image packages the machine learning model and its dependencies and is built using a BentoML-based setup. The frontend image contains the user interface and handles user interactions such as image uploads and request forwarding to the backend.
+
+Each Docker image includes all required dependencies defined in the project configuration, ensuring that the application runs identically regardless of the host system. Locally, the containers can be run using standard Docker commands, for example:
+
+docker run --name evaluate1   -v ~/MLOPs_Project/data:/app/data   -v ~/MLOPs_Project/models:/app/models   -v ~/MLOPs_Project/results:/app/results   evaluation:latest   --data_root ./data   --class_name carpet   --weights_path ./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth   --memory_bank_path ./models/memory_bank.pt   --output_dir ./results/figures
+
+to start the evaluation.
+
+The same images were pushed to the artifact registry and deployed on Google Cloud Run, allowing an efficient deployment. One of the Dockerfiles used in the project can be found here:
+
+https://github.com/Kxlar/MLOPs_Project/blob/main/dockerfiles/evaluation.dockerfile
 
 ### Question 16
 
@@ -613,4 +623,4 @@ Finally, we worked on our github management skills, encountering some issues wit
 
 Student s254145 was in charge of setting up the github repo and the initial cookiecutter template, refactoring the DINOv3 repo to keep only mandatory scripts to run our model, CLI implementation, unit testing for data.py, model.py, train.py, inference.py and evaluate.py, both API backends (FastAPI and bentoML), ONNX conversion for bentoML, testing APIs and load testing.
 
-I (s253047) was in charge of Google Cloud related tasks, like managing the bucket, artifact repository, using the Engine, deploying and monitoring the application with Cloud Run. I used gemini to help me on some docker and yaml files, some bash commands and Cloud manipulations (connecting frontend and backend Run services for instance). They call me cloud wizard. Also successfully killed than damn dependabot. They fear me.
+I (s253047) was in charge of Google Cloud related tasks, like managing the bucket, artifact repository, using the Engine, deploying and monitoring the application with Cloud Run. I used gemini to help me on some docker and yaml files, some bash commands and Cloud manipulations (connecting frontend and backend Run services for instance). They call me cloud wizard. They fear me.
