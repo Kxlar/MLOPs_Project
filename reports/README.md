@@ -241,7 +241,7 @@ In total, we implemented 34 tests covering unit logic, integration pipelines, an
 >
 > Answer:
 
-The total code coverage of code is X%, which includes most of our source code. We didn't implemented tests for service.py which is the bentoml backend of the api, the hydra files, code from the DINOv3 repo and export_onnx_paranoid. We tried to have good code coverage for the most important scripts of our project.
+The total code coverage of our code is 79% (this only takes into account python scripts for which we wrote tests), which includes most of our source code. We didn't implemented tests for service.py which is the bentoml backend of the api, the hydra files, code from the DINOv3 repo, export_onnx_paranoid and data_drift_demo.py. We tried to have good code coverage for the most important scripts of our project. Among the tested scripts, the coverage is 78% for data.py, 69% for evaluate.py, 74% for inference.py, 99% for model.py, 95% for train.py.
 
 ### Question 9
 
@@ -504,7 +504,7 @@ We managed to write 2 API for our model. First we used FastAPI as a first versio
 >
 > Answer:
 
-We succesfully deployed both FastAPI and bentoML locally and containerized them into docker container: backend.dockerfile for FastAPI, for bentoML we built a bento then containerize it into an auto docker build. Afterwards we implemented a frontend for the API and deployed it in the cloud using two different services on GCP: one for backend (bentoML) and one for frontend. Our app is available at https://frontend-445436263618.europe-west1.run.app/. To use the service we call api_inference.py so a user would use *'uv run src/anomaly_detection/api_inference.py --image_path --host --port'* and the infered image is shown using matplotlib. 
+We succesfully deployed both FastAPI and bentoML locally and containerized them into docker container: backend.dockerfile for FastAPI, for bentoML we built a bento then containerized it into an auto docker build. Afterwards we implemented a frontend for the API and deployed it in the cloud using two different services on GCP: one for backend (bentoML) and one for frontend. Our app is available at https://frontend-445436263618.europe-west1.run.app/. To use the service we call api_inference.py so a user would use *'uv run src/anomaly_detection/API/api_inference.py --image_path --host --port'* and the infered image is shown using matplotlib.
 
 ### Question 25
 
@@ -589,7 +589,14 @@ We implemeted a frontend for our API because we felt like it was nice to have a 
 >
 > Answer:
 
---- question 29 fill here ---
+[![Overview](figures/overview.png)](figures/overview.png)
+
+The system architecture depicted in the figure illustrates the end-to-end workflow for model development, deployment, and user access. The process begins with the developer's local machine, where coding, experimentation, and initial model testing occur. To manage experiments efficiently, we integrate Hydra, which enables reproducibility and easy configuration of experiments. Once experiments are complete, the developer pushes both code and configuration files to GitHub, which acts as the central repository for version control.
+In parallel, the data and trained model are stored in a cloud storage bucket. This ensures that large datasets and model weights are accessible both to automated pipelines and end users (publicly), without the need for local downloads each time. The combination of code in GitHub and public data in the bucket forms the foundation for deployment.
+When code is pushed to GitHub, it triggers GitHub Actions workflows, which automate tasks like running tests, or automated linting and formatting (pre commit). Cloud Run hosts both the frontend interface and the BentoML backend, allowing the model to be served as an API and providing a user-friendly interface.
+Finally, users can interact with the deployed service through the online frontend or locally: users can download the data and models from the cloud bucket and keep their local copies up to date via git pull, enabling offline experimentation or further development.
+Overall, this architecture provides a seamless pipeline from local development and experiment management to user access,
+
 
 ### Question 30
 
