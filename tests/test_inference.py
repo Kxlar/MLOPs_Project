@@ -129,33 +129,39 @@ def test_directory_creation(mock_dataset_cls, mock_args):
 
 def test_gpu_handling(mock_args):
     """
-    Verifies that the script attempts to use CUDA if available.
+    Verifies logic for selecting CUDA if available.
+    Uses full mocking to run successfully on CPU-only machines.
     """
-    # 1. Force GPU detection to True
-    with patch("torch.cuda.is_available", return_value=True):
+    # 1. Mock the entire torch module inside inference.py
+    with patch.object(inference, "torch") as mock_torch:
 
-        # 2. Spy on load_dinov3 to check which device it receives
+        # 2. Configure expected behavior
+        mock_torch.cuda.is_available.return_value = True
+
+        # Define a unique object to represent the CUDA device
+        expected_device = MagicMock()
+        expected_device.type = "cuda"
+        mock_torch.device.return_value = expected_device
+
+        # 3. Mock dependencies to isolate the device selection logic
         with patch.object(inference, "load_dinov3") as mock_load:
-
-            # 3. Mock Dataset (return empty to skip loop)
             with patch.object(inference, "MVTecDataset") as mock_ds:
+                # Return empty dataset to skip the inference loop
                 mock_ds.return_value.__len__.return_value = 0
 
-                # 4. Mock build_transform (called before dataset)
                 with patch.object(inference, "build_transform"):
+                    # Mock the model class so .to(device) doesn't fail on the mock object
+                    with patch.object(inference, "DINOv3FeatureExtractor"):
 
-                    # 5. NEW: Mock torch to handle memory_bank loading
-                    with patch.object(inference, "torch") as mock_torch:
-                        # Setup fake memory bank return
-                        mock_torch.load.return_value = MagicMock()
-                        # Ensure checks like torch.cuda.is_available still work if called via this mock
-                        mock_torch.cuda.is_available.return_value = True
-                        mock_torch.device = torch.device
-
-                        # Run
+                        # 4. Run execution
                         inference.run(mock_args)
 
-        # Verification
+        # 5. Assertions
+        # Did the code ask for a cuda device?
+        mock_torch.device.assert_called_with("cuda")
+
+        # Did load_dinov3 receive our mocked device object?
         assert mock_load.called
         args, _ = mock_load.call_args
+        assert args[1] == expected_device
         assert args[1].type == "cuda"
