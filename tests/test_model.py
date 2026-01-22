@@ -1,17 +1,9 @@
+from unittest.mock import MagicMock, patch
+
+import numpy as np
 import pytest
 import torch
 import torch.nn as nn
-import numpy as np
-from unittest.mock import patch, MagicMock
-
-import sys
-from pathlib import Path
-
-# Ensure project root is in path
-current_file = Path(__file__).resolve()
-project_root = current_file.parents[1]
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
 
 import src.anomaly_detection.model as model_module
 from src.anomaly_detection.model import (

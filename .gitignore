@@ -2,7 +2,7 @@ docs/site/
 data/
 models/
 results/
-carpet/ 
+carpet/
 
 
 # test cache
@@ -186,3 +186,13 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 outputs/
+
+# MkDocs build output
+site/
+build/
+docs/build/
+
+# MkDocs build output
+site/
+build/
+docs/build/

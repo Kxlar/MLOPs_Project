@@ -17,7 +17,7 @@ COPY pyproject.toml pyproject.toml
 COPY README.md README.md
 COPY src/ src/
 COPY models/ models/
-COPY data/ data/ 
+COPY data/ data/
 
 # Install project dependencies
 RUN uv sync --locked --no-cache --no-install-project

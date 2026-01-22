@@ -63,7 +63,6 @@ def build_transform(img_size: int, args=None, is_saving=False):
 
     # Apply augmentations only if requested
     if args and args.augment and hasattr(args, "aug_types"):
-
         if "rotation" in args.aug_types:
             transforms.append(T.RandomRotation(degrees=args.rot_degrees))
 
@@ -99,12 +98,8 @@ def build_dataloaders(args):
     # Test transform: Resize + Norm (No augmentation)
     test_transform = build_transform(args.img_size, args=None, is_saving=False)
 
-    train_dataset = MVTecDataset(
-        args.data_root, args.class_name, split="train", transform=train_transform
-    )
-    test_dataset = MVTecDataset(
-        args.data_root, args.class_name, split="test", transform=test_transform
-    )
+    train_dataset = MVTecDataset(args.data_root, args.class_name, split="train", transform=train_transform)
+    test_dataset = MVTecDataset(args.data_root, args.class_name, split="test", transform=test_transform)
 
     train_loader = DataLoader(
         train_dataset,
@@ -165,39 +160,67 @@ def load_ground_truth_mask(img_path, data_root, class_name, img_size):
 
 
 def save_augmented_dataset(args):
+    """Generate and save an augmented ("drifted") dataset to disk.
+
+    This is used by the data drift demo to write a new dataset folder under
+    `save_aug_path/save_aug_dataset_name/<split>/...`.
+
+    - For split=train, only `good/` images are used.
+    - For split=test, images are saved under their defect-type folder.
+      If `--include_anomalies` is not set, only `good/` images are drifted.
+
+    Note: If you use geometric transforms (e.g. rotation), ground-truth masks are
+    NOT transformed here.
     """
-    Generates and saves augmented images to disk without normalization.
-    """
-    print(f"Saving augmented dataset to: {args.save_aug_path}")
+
+    if not args.save_aug_path:
+        raise ValueError("save_aug_path must be set to save an augmented dataset")
+
+    if args.split not in {"train", "test"}:
+        raise ValueError("split must be one of: train, test")
+
+    save_root = Path(args.save_aug_path)
+    dataset_name = args.save_aug_dataset_name or f"{args.class_name}_augmented"
+
+    print(f"Saving augmented dataset to: {save_root} (dataset={dataset_name}, split={args.split})")
 
     # Transform: Resize + Augment (No Tensor/Norm)
     aug_transform = build_transform(args.img_size, args=args, is_saving=True)
 
-    # Load raw dataset
-    dataset = MVTecDataset(
-        args.data_root, args.class_name, split="train", transform=None
-    )
+    # Collect input images
+    pattern = Path(args.data_root) / args.class_name / args.split / "*" / "*.*"
+    input_paths = sorted(glob(str(pattern)))
+    if args.split == "train":
+        input_paths = [p for p in input_paths if "good" in Path(p).parts]
+    elif not args.include_anomalies:
+        input_paths = [p for p in input_paths if "good" in Path(p).parts]
 
-    output_dir = (
-        Path(args.save_aug_path) / f"{args.class_name}_augmented" / "train" / "good"
-    )
-    output_dir.mkdir(parents=True, exist_ok=True)
+    out_base = save_root / dataset_name / args.split
+    out_base.mkdir(parents=True, exist_ok=True)
 
     count = 0
-    for _, _, img_path in dataset:
+    for img_path in input_paths:
+        img_path = Path(img_path)
         original_img = Image.open(img_path).convert("RGB")
 
-        # Generate N augmentations per image
+        # MVTec convention: root/class/split/<defect_type>/<filename>
+        defect_type = img_path.parent.name
+        out_dir = out_base / defect_type
+        out_dir.mkdir(parents=True, exist_ok=True)
+
         for i in range(args.aug_multiplier):
             aug_img = aug_transform(original_img)
 
-            stem = Path(img_path).stem
-            save_name = f"{stem}_aug_{i}.png"
+            stem = img_path.stem
+            if args.aug_multiplier == 1:
+                save_name = f"{stem}.png"
+            else:
+                save_name = f"{stem}_aug_{i}.png"
 
-            aug_img.save(output_dir / save_name)
+            aug_img.save(out_dir / save_name)
             count += 1
 
-    print(f"Process complete. Saved {count} images.")
+    print(f"Process complete. Saved {count} images to {out_base}.")
 
 
 def get_args():
@@ -211,9 +234,7 @@ def get_args():
 
     # Augmentation params
     parser.add_argument("--augment", action="store_true", help="Enable augmentation")
-    parser.add_argument(
-        "--aug_types", nargs="+", default=[], choices=["rotation", "color", "blur"]
-    )
+    parser.add_argument("--aug_types", nargs="+", default=[], choices=["rotation", "color", "blur"])
     parser.add_argument(
         "--aug_multiplier",
         type=int,
@@ -229,8 +250,24 @@ def get_args():
     parser.add_argument("--blur_kernel", type=int, default=3)
 
     # Save mode
+    parser.add_argument("--save_aug_path", type=str, default=None, help="Path to save augmented images")
     parser.add_argument(
-        "--save_aug_path", type=str, default=None, help="Path to save augmented images"
+        "--save_aug_dataset_name",
+        type=str,
+        default=None,
+        help="Name of the output dataset folder (defaults to <class_name>_augmented)",
+    )
+    parser.add_argument(
+        "--split",
+        type=str,
+        default="train",
+        choices=["train", "test"],
+        help="Which split to drift/save (save mode only)",
+    )
+    parser.add_argument(
+        "--include_anomalies",
+        action="store_true",
+        help="When split=test in save mode, also drift defect folders (otherwise only good)",
     )
 
     return parser.parse_args()
