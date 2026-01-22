@@ -171,6 +171,12 @@ We made this choice because we were already familiar with argparse, which allowe
 
 We managed our project dependencies using uv, leveraging the pyproject.toml file along with the corresponding lock file (uv.lock) to explicitly define all required packages and their versions. The virtual environment itself is not versioned and is included in .gitignore to avoid unnecessary files in the repository. This setup ensures reproducibility: any new team member only needs to have Python and uv installed. After cloning the repository, they can create and activate a local virtual environment and run uv sync. This command installs the exact versions of all dependencies as specified in the lock file, guaranteeing a consistent and fully reproducible development environment across all machines.
 
+For downloading the dataset and model from GCP Bucket, we can use the setup.sh file with the following commands:
+
+chmod +x setup.sh
+
+./setup.sh
+
 ### Question 5
 
 > **We expect that you initialized your project using the cookiecutter template. Explain the overall structure of your**
