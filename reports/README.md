@@ -101,12 +101,9 @@ will check the repositories and the code to verify your answers.
 * [x] Setup collection of input-output data from your deployed application (M27)
 * [ ] Deploy to the cloud a drift detection API (M27)
 * [ ] Instrument your API with a couple of system metrics (M28)
-* [ ] Setup cloud monitoring of your instrumented application (M28)
-* [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
-* [x] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 * [x] Setup cloud monitoring of your instrumented application (M28)
 * [x] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
-* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+* [x] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 * [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
 * [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
 
@@ -203,7 +200,8 @@ From the cookiecutter template we have filled out almost every folder execpt not
 >
 > Answer:
 
---- question 6 fill here ---
+We used ruff for linting and the Black Formatter VScode extension to perform auto formatting when saving a python script. We also used Copilot auto suggestion feature to correct the code as we were coding. For documentation, we included clear docstrings as well commentaries for all critical functions to explain logic and wrote a documentation file index.md explaining how to use the different scripts and features of our project.
+For larger projects, these concepts are essential for scalability and collaboration. Consistent formatting prevents style conflicts, while static typing and documentation reduce cognitive load. This acts as a contract between components, making it significantly easier for new developers to onboard and preventing bugs when the codebase grows complexity.
 
 ## Version control
 
@@ -222,7 +220,7 @@ From the cookiecutter template we have filled out almost every folder execpt not
 >
 > Answer:
 
-We've implemented tests for our data, model, training, inference and evaluation consisting in total of 34 tests mainly unit tests and pipeline logic tests. Testing our data mainly consists of creating a mock dataset and try loading it. For our model and training we used patches to simulate loading and using the model without heavy calculation.
+In total, we implemented 34 tests covering unit logic, integration pipelines, and system load. We implemented tests for data.py, model.py, train.py, inference.py, evaluate.py and api.py. We primarily validated critical model behaviors, such as tensor shapes and memory bank normalization, while using unittest.mock to patch heavy dependencies like DINOv3 to avoid loading the model when testing training or inference. Additionally, we ensured system robustness by testing edge cases, such as missing ground truth masks or GPU unavailability, and verified the API's stability through Locust load testing.
 
 ### Question 8
 
@@ -490,7 +488,7 @@ We managed to write 2 API for our model. First we used FastAPI as a first versio
 >
 > Answer:
 
-We succesfully deployed both FastAPI and bentoML locally and containerized them into docker container backend.dockerfile for FastAPI and for bentoML built a bento then containerize it into an auto docker build. Afterwards we implemented a frontend for the API and deployed it in the cloud using ... . To invoke the service we used api_inference.py so a user would use *'uv run src/anomaly_detection/api_inference.py --image_path --host --port'* and the infered image is shown using matplotlib.
+We succesfully deployed both FastAPI and bentoML locally and containerized them into docker container: backend.dockerfile for FastAPI, for bentoML we built a bento then containerize it into an auto docker build. Afterwards we implemented a frontend for the API and deployed it in the cloud using two different services on GCP: one for backend (bentoML) and one for frontend. Our app is available at https://frontend-445436263618.europe-west1.run.app/. To use the service we call api_inference.py so a user would use *'uv run src/anomaly_detection/api_inference.py --image_path --host --port'* and the infered image is shown using matplotlib. 
 
 ### Question 25
 
