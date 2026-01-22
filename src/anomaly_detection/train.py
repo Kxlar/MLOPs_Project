@@ -3,6 +3,15 @@ import argparse
 from pathlib import Path
 import torch
 
+from loguru import logger
+import sys
+
+# ---- Logging setup ----
+logger.remove()
+logger.add(sys.stderr, level="INFO")
+logger.add("logs/run_{time}.log", rotation="10 MB", retention="7 days", level="INFO")
+
+
 # Ensure project root is in path
 current_file = Path(__file__).resolve()
 project_root = current_file.parents[2]
@@ -40,6 +49,14 @@ def get_args():
 
 def main():
     args = get_args()
+    
+    # logging
+    logger.info("Starting training (memory bank build)")
+    logger.info(f"data_root={args.data_root} class_name={args.class_name}")
+    logger.info(f"weights_path={args.weights_path}")
+    logger.info(f"save_path={args.save_path}")
+    logger.info(f"img_size={args.img_size} batch_size={args.batch_size} augment={args.augment}")
+
     run(args)
 
 

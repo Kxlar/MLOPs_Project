@@ -196,3 +196,7 @@ docs/build/
 site/
 build/
 docs/build/
+
+# Logging and experiment artifacts
+logs/
+wandb/
