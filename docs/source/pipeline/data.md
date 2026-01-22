@@ -1,7 +1,19 @@
 
-# Data pipeline
 
-This project uses the **MVTec AD** dataset. The data module (`src/anomaly_detection/data.py`) is responsible for:
+This project uses the **MVTec AD** dataset. 
+
+## 1. Downloading Dataset
+Our dataset can be downloaded from the cloud
+
+```bash
+chmod +x setup.sh
+```
+```bash
+./setup.sh
+```
+
+##  2. Data module
+The data module (`src/anomaly_detection/data.py`) is responsible for:
 
 - Loading images from the dataset folders
 - Creating PyTorch datasets and dataloaders
@@ -11,7 +23,7 @@ This project uses the **MVTec AD** dataset. The data module (`src/anomaly_detect
 
 ---
 
-## Expected folder structure
+## 3. older structure
 
 The code searches using this pattern:
 
@@ -43,7 +55,7 @@ data/raw/
 ---
 
 
-## Quick check: test data loading
+## 4. Data loading
 
 Use this to verify you have the dataset in the correct structure:
 
@@ -56,22 +68,3 @@ uv run python src/anomaly_detection/data.py \
 
 ```
 
-## Save an augmented / drifted dataset (optional)
-
-This mode writes a new dataset folder to disk. This is mainly used for drift demos.
-
-```bash
-uv run python src/anomaly_detection/data.py \
-  --data_root ./data/raw \
-  --class_name carpet \
-  --split train \
-  --augment \
-  --aug_types rotation color \
-  --aug_multiplier 2 \
-  --save_aug_path ./data \
-  --save_aug_dataset_name carpet_augmented
-
-
-```
-
----

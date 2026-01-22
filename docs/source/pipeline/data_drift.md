@@ -70,6 +70,8 @@ Side-by-side comparison (demo plot)
 
 The docker build command must be run once to create the Docker image before the data drift experiment can be executed with docker run.
 
+
+
 ## Build  a Docker image 
 ```bash
 docker build -f data_drift_demo.dockerfile -t mlops-data-drift-demo .
@@ -98,4 +100,3 @@ After completion, the following artifacts are produced:
 - Histogram after adaptation
 - Comparison plot (demo.py)
 
-These results allow us to visually assess the impact of data drift and adaptation.
