@@ -6,6 +6,15 @@ import matplotlib.pyplot as plt
 import torch
 from sklearn.metrics import roc_auc_score, roc_curve
 
+# ---- Logging setup ----
+
+from loguru import logger
+
+logger.remove()
+logger.add(sys.stderr, level="INFO")
+logger.add("logs/eval_{time}.log", rotation="10 MB", retention="7 days", level="INFO")
+
+
 # Ensure project root is in path
 current_file = Path(__file__).resolve()
 project_root = current_file.parents[2]
@@ -51,6 +60,14 @@ def get_args():
 
 def main():
     args = get_args()
+
+    # loggings
+    logger.info("Starting evaluation")
+    logger.info(f"class_name={args.class_name} output_dir={args.output_dir}")
+    logger.info(f"img_size={args.img_size} batch_size={args.batch_size} k={args.k}")
+    logger.info(f"scores_jsonl={args.scores_jsonl} hist_only={args.hist_only}")
+    logger.info(f"data_root={args.data_root} weights_path={args.weights_path} memory_bank_path={args.memory_bank_path}")
+
     run(args)
 
 
