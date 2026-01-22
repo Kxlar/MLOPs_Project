@@ -93,4 +93,4 @@ line-length = 120
 
 [tool.coverage.run]
 source = ["src/anomaly_detection"]
-omit = ["tests/*" , "__init__.py" , "src/anomaly_detection/*hydra*.py", "src/anomaly_detection/layers/*", "src/anomaly_detection/utils.py", "src/anomaly_detection/vision_transformer.py"]
+omit = ["tests/*" , "__init__.py" , "src/anomaly_detection/hydra/*", "src/anomaly_detection/layers/*", "src/anomaly_detection/utils.py", "src/anomaly_detection/vision_transformer.py", "src/anomaly_detection/API/*", "src/anomaly_detection/*demo.py", "src/anomaly_detection/*onnx*.py"]

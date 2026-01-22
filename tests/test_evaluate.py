@@ -27,6 +27,8 @@ def mock_args(tmp_path):
         k=5,
         augment=False,
         aug_types=[],
+        scores_jsonl=None,
+        hist_only=False,
     )
 
 
@@ -72,15 +74,15 @@ def test_get_args():
 # --- INTEGRATION TESTS: FULL PIPELINE ---
 
 
-@patch("src.anomaly_detection.evaluate.build_dataloaders")
-@patch("src.anomaly_detection.evaluate.load_dinov3")
-@patch("src.anomaly_detection.evaluate.DINOv3FeatureExtractor")
-@patch("src.anomaly_detection.evaluate.torch.load")  # For memory bank
-@patch("src.anomaly_detection.evaluate.compute_anomaly_map")
-@patch("src.anomaly_detection.evaluate.reduce_anomaly_map")
-@patch("src.anomaly_detection.evaluate.upsample_anomaly_map")
-@patch("src.anomaly_detection.evaluate.load_ground_truth_mask")
-@patch("src.anomaly_detection.evaluate.plt")  # Mock plotting to avoid GUI/File creation
+@patch.object(evaluate, "build_dataloaders")
+@patch.object(evaluate, "load_dinov3")
+@patch.object(evaluate, "DINOv3FeatureExtractor")
+@patch.object(evaluate, "torch")
+@patch.object(evaluate, "compute_anomaly_map")
+@patch.object(evaluate, "reduce_anomaly_map")
+@patch.object(evaluate, "upsample_anomaly_map")
+@patch.object(evaluate, "load_ground_truth_mask")
+@patch.object(evaluate, "plt")
 def test_evaluation_pipeline_happy_path(
     mock_plt,
     mock_load_mask,
@@ -161,17 +163,17 @@ def test_evaluation_pipeline_happy_path(
 # --- EDGE CASE TESTS ---
 
 
-@patch("src.anomaly_detection.evaluate.roc_auc_score")
-@patch("src.anomaly_detection.evaluate.roc_curve")
-@patch("src.anomaly_detection.evaluate.build_dataloaders")
-@patch("src.anomaly_detection.evaluate.load_dinov3")
-@patch("src.anomaly_detection.evaluate.DINOv3FeatureExtractor")
-@patch("src.anomaly_detection.evaluate.torch.load")
-@patch("src.anomaly_detection.evaluate.compute_anomaly_map")
-@patch("src.anomaly_detection.evaluate.reduce_anomaly_map")
-@patch("src.anomaly_detection.evaluate.upsample_anomaly_map")
-@patch("src.anomaly_detection.evaluate.load_ground_truth_mask")
-@patch("src.anomaly_detection.evaluate.plt")
+@patch.object(evaluate, "roc_auc_score")
+@patch.object(evaluate, "roc_curve")
+@patch.object(evaluate, "build_dataloaders")
+@patch.object(evaluate, "load_dinov3")
+@patch.object(evaluate, "DINOv3FeatureExtractor")
+@patch.object(evaluate, "torch")
+@patch.object(evaluate, "compute_anomaly_map")
+@patch.object(evaluate, "reduce_anomaly_map")
+@patch.object(evaluate, "upsample_anomaly_map")
+@patch.object(evaluate, "load_ground_truth_mask")
+@patch.object(evaluate, "plt")
 def test_pixel_logic_missing_masks(
     mock_plt,
     mock_load_mask,
@@ -250,13 +252,8 @@ def test_perfect_separation_metric_check(mock_args):
     assert auc_bad == 0.0
 
 
-@patch("src.anomaly_detection.evaluate.build_dataloaders")
-@patch("src.anomaly_detection.evaluate.load_dinov3")
-@patch("src.anomaly_detection.evaluate.DINOv3FeatureExtractor")
-@patch("src.anomaly_detection.evaluate.torch.load")
-@patch("src.anomaly_detection.evaluate.compute_anomaly_map")
-@patch("src.anomaly_detection.evaluate.reduce_anomaly_map")
-def test_directory_creation(mock_reduce, mock_compute, mock_torch, mock_ext, mock_load, mock_data, mock_args):
+@patch.object(evaluate, "build_dataloaders")
+def test_directory_creation(mock_data, mock_args):
     """Verifies output folder structure."""
 
     # TIP: Intentionally make data loading fail.
