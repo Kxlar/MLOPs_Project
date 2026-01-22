@@ -42,6 +42,7 @@ nav:
       - Train: pipeline/train.md
       - Inference: pipeline/inference.md
       - Evaluation: pipeline/evaluation.md
+      - Data Drift: pipeline/data_drift.md
   - Deployment:
       - Docker: deployment/docker.md
       - API (FastAPI): deployment/api.md
