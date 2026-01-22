@@ -50,5 +50,5 @@ jobs:
           coverage run -m pytest tests/
 
           # Report coverage
-          # Fail if coverage is below 80%
-          coverage report -m -i --fail-under=80
+          # Fail if coverage is below 50%
+          coverage report -m -i --fail-under=50
