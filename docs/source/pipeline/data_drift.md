@@ -72,7 +72,7 @@ The docker build command must be run once to create the Docker image before the 
 
 
 
-## Build  a Docker image 
+## Build  a Docker image
 ```bash
 docker build -f data_drift_demo.dockerfile -t mlops-data-drift-demo .
 ```
@@ -99,4 +99,3 @@ After completion, the following artifacts are produced:
 - Histogram before adaptation
 - Histogram after adaptation
 - Comparison plot (demo.py)
-

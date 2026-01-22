@@ -19,12 +19,8 @@ def get_args():
     )
 
     # Server Connection Arguments
-    parser.add_argument(
-        "--host", type=str, default="localhost", help="API Host (default: localhost)"
-    )
-    parser.add_argument(
-        "--port", type=int, default=3000, help="API Port (default: 3000)"
-    )
+    parser.add_argument("--host", type=str, default="localhost", help="API Host (default: localhost)")
+    parser.add_argument("--port", type=int, default=3000, help="API Port (default: 3000)")
 
     return parser.parse_args()
 
@@ -71,9 +67,7 @@ def test_prediction(args):
 
                 plt.figure(figsize=(5, 5))
                 plt.imshow(img)
-                plt.title(
-                    f"Score: {data['anomaly_score']} | Anomaly: {data['is_anomaly']}"
-                )
+                plt.title(f"Score: {data['anomaly_score']} | Anomaly: {data['is_anomaly']}")
                 plt.axis("off")
                 plt.show()
             except Exception as e:

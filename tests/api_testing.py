@@ -27,10 +27,9 @@ def mock_dependencies():
     with (
         patch("src.anomaly_detection.api.load_dinov3") as mock_load,
         patch("src.anomaly_detection.api.torch.load") as mock_torch_load,
-        patch("src.anomaly_detection.api.run_auto_build") as mock_build,
+        patch("src.anomaly_detection.api.run_auto_build") as _mock_build,
         patch("src.anomaly_detection.api.compute_anomaly_map") as mock_compute,
     ):
-
         # Mock model objects
         mock_load.return_value = MagicMock()
         mock_torch_load.return_value = MagicMock()

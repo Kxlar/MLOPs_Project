@@ -66,9 +66,7 @@ def test_save_heatmap_and_overlay(dummy_image_file, tmp_path):
     am_up = np.random.rand(224, 224).astype(np.float32)
     # Using string patch here too for consistency, though object patch might work for plt
     with patch("src.anomaly_detection.inference.plt") as mock_plt:
-        inference.save_heatmap_and_overlay(
-            img_path, am_up, 224, str(tmp_path / "h.png"), str(tmp_path / "o.png")
-        )
+        inference.save_heatmap_and_overlay(img_path, am_up, 224, str(tmp_path / "h.png"), str(tmp_path / "o.png"))
         assert mock_plt.savefig.call_count == 2
 
 
@@ -134,7 +132,6 @@ def test_gpu_handling(mock_args):
     """
     # 1. Mock the entire torch module inside inference.py
     with patch.object(inference, "torch") as mock_torch:
-
         # 2. Configure expected behavior
         mock_torch.cuda.is_available.return_value = True
 
@@ -152,7 +149,6 @@ def test_gpu_handling(mock_args):
                 with patch.object(inference, "build_transform"):
                     # Mock the model class so .to(device) doesn't fail on the mock object
                     with patch.object(inference, "DINOv3FeatureExtractor"):
-
                         # 4. Run execution
                         inference.run(mock_args)
 
