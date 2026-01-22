@@ -1,5 +1,5 @@
 # bentoml/bentofile.yaml
-service: "src.anomaly_detection.service:AnomalyDetector"
+service: "src.anomaly_detection.API.service:AnomalyDetector"
 labels:
   owner: mlops-team15
   project: anomaly-detection

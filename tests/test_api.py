@@ -14,7 +14,7 @@ project_root = current_file.parents[1]
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from src.anomaly_detection.api import app, ml_models
+from MLOPs_Project.src.anomaly_detection.API.api import app, ml_models
 
 # --- Fixtures ---
 
