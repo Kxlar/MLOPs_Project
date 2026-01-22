@@ -54,7 +54,7 @@ uv run python src/anomaly_detection/inference.py \
   --class_name carpet \
   --weights_path ./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth \
   --memory_bank_path ./models/memory_bank.pt \
-  --output_dir ./reports/figures \
+  --output_dir ./results/figures \
   --img_size 224 \
   --batch_size 8 \
   --k 10

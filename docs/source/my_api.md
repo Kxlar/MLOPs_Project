@@ -14,8 +14,5 @@ This page is automatically generated from the project’s Python docstrings usin
 ## Evaluation
 ::: anomaly_detection.evaluate
 
-## Service
-::: anomaly_detection.service
-
 ## API (FastAPI)
-::: anomaly_detection.api
+::: anomaly_detection.API.api
