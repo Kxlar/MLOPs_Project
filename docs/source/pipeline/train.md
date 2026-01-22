@@ -31,14 +31,13 @@ Script: `src/anomaly_detection/train.py`
 
 ---
 
-## Run training
+## Training
+To build the memory bank, run:
 
 ```bash
-uv run python src/anomaly_detection/train.py \
+uv run src/anomaly_detection/train.py \
   --data_root ./data/raw \
   --class_name carpet \
   --weights_path ./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth \
-  --save_path ./models/memory_bank.pt \
-  --img_size 224 \
-  --batch_size 8
+  --save_path ./models/memory_bank.pt
 ```

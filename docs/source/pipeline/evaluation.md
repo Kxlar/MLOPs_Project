@@ -25,6 +25,12 @@ There are **two evaluation modes**:
 
 ---
 
+### Logging
+
+Evaluation logs key metrics such as image-level and pixel-level ROC AUC.
+Each run produces a timestamped log file in `logs/` for traceability.
+
+
 ## Mode A: Evaluate from a scores JSONL file
 
 Use this if you ran inference with `--scores_jsonl`.
