@@ -1055,12 +1055,19 @@ Verify installation:
 </span></code></pre></div></p>
 <hr />
 <h2 id="7-run-bentoml-api">7. Run BentoML API</h2>
-<p>Build and run the backend API using BentoML:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>bentoml<span class="w"> </span>build
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>bentoml<span class="w"> </span>containerize<span class="w"> </span>anomaly_detection_service:latest
+<p>Build and run the backend API using BentoML.</p>
+<p>Convert our model into a ONNX model:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>uv<span class="w"> </span>run<span class="w"> </span>export_onnx_paranoid.py
 </span></code></pre></div></p>
-<p>Copy the container tag and run:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">3000</span>:3000<span class="w"> </span>anomaly_detection_service:TAG
+<p>Initialize BentoML:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>uv<span class="w"> </span>run<span class="w"> </span>bentoml<span class="w"> </span>--version
+</span></code></pre></div></p>
+<p>Build the docker container:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>uv<span class="w"> </span>run<span class="w"> </span>bentoml<span class="w"> </span>build
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>bentoml<span class="w"> </span>containerize<span class="w"> </span>anomaly_detection_service:latest
+</span></code></pre></div></p>
+<p>Copy the container tag and run the following command to launch the API:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">3000</span>:3000<span class="w"> </span>anomaly_detection_service:TAG
 </span></code></pre></div></p>
 <hr />
 
