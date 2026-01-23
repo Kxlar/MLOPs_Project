@@ -20,8 +20,7 @@ It assumes no prior knowledge of the codebase.
 ## 2. Installation
 Clone the repository:
 ```bash
-git clone <REPO_URL>
-cd MLOPs_Project
+git clone https://github.com/Kxlar/MLOPs_Project.git
 ```
 
 ## 3. Data and Pre-trained model
