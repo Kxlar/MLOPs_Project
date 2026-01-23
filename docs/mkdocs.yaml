@@ -51,4 +51,3 @@ nav:
       - Style & Linting: development/style.md
       - Hydra: development/hydra.md
       - Loggining & Profiling: development/logging-profiling.md
-  - API Reference: my_api.md
