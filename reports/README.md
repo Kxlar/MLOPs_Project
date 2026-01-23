@@ -380,15 +380,24 @@ https://github.com/Kxlar/MLOPs_Project/blob/main/dockerfiles/evaluation.dockerfi
 > **When running into bugs while trying to run your experiments, how did you perform debugging? Additionally, did you**
 > **try to profile your code or do you think it is already perfect?**
 >
-> Recommended answer length: 100-200 words.
->
-> Example:
-> *Debugging method was dependent on group member. Some just used ... and others used ... . We did a single profiling*
-> *run of our main code at some point that showed ...*
->
-> Answer:
+ # Logging
 
---- question 16 fill here ---
+Training and evaluation scripts use Loguru for logging.
+
+- Logs are printed to the terminal for real-time monitoring
+- Logs are written to the `logs/` directory for later inspection
+- Log files are timestamped per run to ensure traceability and reproducibility
+
+Logging was used during debugging to track execution flow, configuration values,
+and to verify that data loading, model inference, and evaluation stages executed
+as expected.
+
+During evaluation, key metrics such as image-level and pixel-level ROC AUC are
+logged. Each run produces a separate timestamped log file, making it easier to
+compare experiments and reproduce results.
+
+
+In addition, we performed a single profiling run of our main evaluation pipeline using Python’s built-in cProfile. The profiling showed that the initial runtime (≈552 seconds) was dominated by feature extraction with the DINOv3 backbone, k-nearest-neighbor distance computations, as well as significant I/O and import overhead caused by running on a Windows-mounted filesystem through WSL. After moving the project to a Linux-native filesystem, the total runtime decreased by more than 60% (to ≈213 seconds), confirming that I/O and import overhead were major bottlenecks. The remaining runtime is now primarily compute-bound, dominated by model forward passes and distance calculations. No further optimizations were implemented, as the goal was to identify and analyze bottlenecks rather than fully optimize the pipeline.
 
 ## Working in the cloud
 
@@ -649,4 +658,6 @@ I (s253047) was in charge of Google Cloud related tasks, like managing the bucke
 
 Student s253080 was in charge of enforcing good coding practices in the project through the use of ruff and by adding comments in the code where needed, setting up configuration files, using Hydra for loading configurations and run reproducible experiments, getting continuous integration running on GitHub,  adding linting to the continuous integration, pre-commit hooks for VC, setting up data drifting detection and creating the CLI for it, making a pipeline to visualize data drifting with a histogram. I used GitHub Copilot in VSCode as a coding assistant. It was my first time using it and I really liked how much of the context it captures.
 
-Student s204746 integrated the dataset, pretrained model, and weights into the cookiecutter project structure. implemented profiling, logging, Frontend (Streamlit) and developed the Mkdocs Report.
+Student s204746 integrated the dataset, pretrained model, and weights into the cookiecutter project structure. implemented profiling, logging, Frontend (Streamlit) and link it to backend locally amd finally developed the documentation.
+
+
