@@ -46,7 +46,6 @@ nav:
       - Data Drift: pipeline/data_drift.md
   - Deployment:
       - Docker: deployment/docker.md
-      - Frontend: deployment/frontend.md
       - Cloud (GCP): deployment/cloud.md
   - Development:
       - Style & Linting: development/style.md
