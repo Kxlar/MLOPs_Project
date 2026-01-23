@@ -2,7 +2,7 @@
 
 # Training pipeline (memory bank)
 
-Training in this project means: build a memory bank of normal (good) features using DINOv3 features Script: `src/anomaly_detection/train.py`
+Training in this project means: build a memory bank of normal (good) features using DINOv3 features 
 
 ## Training
 To build the memory bank, run:
