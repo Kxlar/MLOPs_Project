@@ -67,14 +67,72 @@ uv run src/anomaly_detection/api_inference.py
 
 ## 3. Frontend UI (Streamlit)  — `frontend.dockerfile`
 
-Runs a Streamlit web interface for uploading images and calling the backend API. Designed to work both locally and on Google Cloud Run (uses $PORT).
+This project includes a lightweight Streamlit frontend that allows users to
+upload an image and run anomaly detection through the backend API.
 
-### Build & run (local)
+The frontend does not perform inference itself — it acts as a client that
+sends images to the FastAPI backend and displays the returned prediction.
+
+
+---
+
+## 1. Running the Backend (Required)
+
+The frontend expects the backend to be available at:
+```bash
+http://127.0.0.1:8000
+```
+
+Start the backend in a dedicated terminal and keep it running:
 
 ```bash
-docker build -f frontend.dockerfile -t anomaly-frontend .
-docker run --rm -p 8080:8080 -e PORT=8080 anomaly-frontend
+cd ~/projects/MLOPs_Project
+uv run uvicorn src.anomaly_detection.api:app --host 0.0.0.0 --port 8000
 ```
+
+## 2. Running the Frontend (Streamlit)
+
+Open a second terminal and run:
+
+```bash
+cd ~/projects/MLOPs_Project
+uv run streamlit run frontend/frontend.py \
+  --server.port 8501 \
+  --server.address 0.0.0.0
+```
+
+You should see:
+
+You can now view your Streamlit app in your browser.
+URL: http://0.0.0.0:8501
+
+
+Open in your browser:
+```bash
+http://localhost:8501
+
+```
+
+---
+
+### Using the Frontend
+
+1. Open the Streamlit page
+
+2. Upload an image from the MVTec dataset (or a compatible image)
+
+3. Click Run prediction
+
+The frontend will:
+
+* Send the image to /predict
+
+* Wait for the backend response
+
+* Display prediction results
+
+---
+
 
 ## 4. Training — `train.dockerfile`
 Runs the training pipeline in a fully reproducible container.
