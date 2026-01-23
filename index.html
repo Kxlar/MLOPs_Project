@@ -252,8 +252,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#method-at-a-glance" class="md-nav__link">
-    Method at a Glance
+  <a href="#method" class="md-nav__link">
+    Method
   </a>
   
 </li>
@@ -282,6 +282,13 @@
         <li class="md-nav__item">
   <a href="#project-context" class="md-nav__link">
     Project Context
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#team-members" class="md-nav__link">
+    Team Members
   </a>
   
 </li>
@@ -782,8 +789,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#method-at-a-glance" class="md-nav__link">
-    Method at a Glance
+  <a href="#method" class="md-nav__link">
+    Method
   </a>
   
 </li>
@@ -816,6 +823,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#team-members" class="md-nav__link">
+    Team Members
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -841,11 +855,11 @@
 Zero-shot anomaly detection addresses this challenge by learning only from <strong>normal (defect-free) data</strong> and identifying deviations at inference time.</p>
 <p>This project explores whether vision foundation models can enable robust anomaly detection without pre-training nor task-specific fine-tuning.</p>
 <hr />
-<h2 id="method-at-a-glance">Method at a Glance</h2>
-<p>The pipeline is built around <strong>DINOv3</strong>, a self-supervised Vision Transformer:</p>
+<h2 id="method">Method</h2>
+<p>The pipeline is built around DINOv3, a self-supervised Vision Transformer:</p>
 <ol>
 <li>Extract patch-level features from normal training images</li>
-<li>Build a <strong>memory bank</strong> of normal visual patterns</li>
+<li>Build a memory bank of normal visual patterns</li>
 <li>Compare test image features against the memory bank using distance-based scoring</li>
 <li>Produce:</li>
 <li>Image-level anomaly scores</li>
@@ -855,15 +869,16 @@ Zero-shot anomaly detection addresses this challenge by learning only from <stro
 <h2 id="features">Features</h2>
 <p>The project supports:</p>
 <ul>
-<li>🧠 <strong>Zero-shot feature extraction</strong> using DINOv3</li>
-<li>🏦 <strong>Memory bank construction</strong> from normal samples</li>
-<li>🔥 <strong>Pixel-level anomaly heatmaps</strong></li>
-<li>📊 <strong>Image-level &amp; pixel-level evaluation (ROC AUC)</strong></li>
-<li>🧪 <strong>Data augmentation and drift simulation</strong></li>
-<li>🐳 <strong>Dockerized training and inference</strong></li>
-<li>🚀 <strong>FastAPI backend and frontend</strong></li>
-<li>☁️ <strong>Cloud deployment (GCP-ready)</strong></li>
-<li>🔁 <strong>Reproducible experiments with Hydra</strong></li>
+<li><strong>Zero-shot feature extraction</strong> using DINOv3</li>
+<li><strong>Memory bank construction</strong> from normal samples</li>
+<li><strong>Pixel-level anomaly heatmaps</strong></li>
+<li><strong>Image-level &amp; pixel-level evaluation (ROC AUC)</strong></li>
+<li><strong>Data augmentation and drift simulation</strong></li>
+<li><strong>Dockerized training and inference</strong></li>
+<li><strong>FastAPI backend and frontend</strong></li>
+<li><strong>Cloud deployment (GCP-ready)</strong></li>
+<li><strong>Reproducible experiments with Hydra</strong></li>
+<li>among other MLOps implementations</li>
 </ul>
 <hr />
 <h2 id="dataset">Dataset</h2>
@@ -887,6 +902,13 @@ Zero-shot anomaly detection addresses this challenge by learning only from <stro
 <li>Reproducibility</li>
 <li>Automation</li>
 <li>Deployment-ready ML systems</li>
+</ul>
+<h2 id="team-members">Team Members</h2>
+<ul>
+<li>Lea</li>
+<li>Pier</li>
+<li>loic aka Cloud Wizard</li>
+<li>Jawhara</li>
 </ul>
 
 
