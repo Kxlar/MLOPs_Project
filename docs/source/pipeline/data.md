@@ -71,6 +71,8 @@ Users can perform data augmentation on a chosen dataset:
 - Modify the blur
 - Add rotations
 
+Run this to apply augmentations (color, blur and rotation) to the test set and save the images to disk. This is useful for testing model robustness against domain shifts.
+
 ```bash
 uv run ./src/anomaly_detection/data.py \
   --data_root ./data/ \
