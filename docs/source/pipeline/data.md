@@ -27,7 +27,7 @@ To verify you have the dataset in the correct structure, load dataset
 
 ```bash
 uv run python src/anomaly_detection/data.py \
-  --data_root ./data/raw \
+  --data_root ./data/ \
   --class_name carpet \
   --img_size 224 \
   --batch_size 8
@@ -41,7 +41,7 @@ uv run python src/anomaly_detection/data.py \
 Dataset folder structure:
 
 ```text
-data/raw/
+data/
 └── carpet/
     ├── train/
     │   └── good/
@@ -63,5 +63,30 @@ data/raw/
 
 ---
 
+## 4. Data augmentation
+Users can perform data augmentation on a chosen dataset:
+- Modify the contrast
+- Modify the brightness
+- Modify the saturation
+- Modify the blur
+- Add rotations
 
+Run this to apply augmentations (color, blur and rotation) to the test set and save the images to disk. This is useful for testing model robustness against domain shifts.
 
+```bash
+uv run ./src/anomaly_detection/data.py \
+  --data_root ./data/ \
+  --class_name carpet \
+  --augment \
+  --aug_types rotation color blur \
+  --aug_multiplier 1 \
+  --rot_degrees 20 \
+  --color_brightness 0.2 \
+  --color_contrast 0.2 \
+  --color_saturation 0.2 \
+  --blur_kernel 3 \
+  --save_aug_path ./data/augmented \
+  --save_aug_dataset_name carpet_augmented \
+  --split test \
+  --include_anomalies
+```
