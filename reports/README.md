@@ -110,7 +110,7 @@ will check the repositories and the code to verify your answers.
 ### Extra
 
 * [x] Write some documentation for your application (M32)
-* [ ] Publish the documentation to GitHub Pages (M32)
+* [x] Publish the documentation to GitHub Pages (M32)
 * [x] Revisit your initial project description. Did the project turn out as you wanted?
 * [x] Create an architectural diagram over your MLOps pipeline
 * [x] Make sure all group members have an understanding about all parts of the project
@@ -643,11 +643,9 @@ Finally, we worked on our github management skills, encountering some issues wit
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
-Student s254145 was in charge of setting up the github repo and the initial cookiecutter template, refactoring the DINOv3 repo to keep only mandatory scripts to run our model, CLI implementation, unit testing for data.py, model.py, train.py, inference.py and evaluate.py, both API backends (FastAPI and bentoML), ONNX conversion for bentoML, testing APIs and load testing.
+Student s254145 was in charge of setting up the github repo and the initial cookiecutter template, refactoring the DINOv3 repo to keep only mandatory scripts to run our model, CLI implementation, unit testing for data.py, model.py, train.py, inference.py and evaluate.py, both API backends (FastAPI and bentoML), ONNX conversion for bentoML, testing APIs and load testing. I used gemini and copilot to help me debug my code and be more efficient when it comes to commenting my code. I didn't used a lot the integrated VScode gemini interface mainly because I'm not used to it.
 
 I (s253047) was in charge of Google Cloud related tasks, like managing the bucket, artifact repository, using the Engine, deploying and monitoring the application with Cloud Run. I used gemini to help me on some docker and yaml files, some bash commands and Cloud manipulations (connecting frontend and backend Run services for instance). They call me cloud wizard. They fear me.
-
-Student s253080 was in charge of enforcing good coding practices in the project through the use of ruff and by adding comments in the code where needed, setting up configuration files, using Hydra for loading configurations and run reproducible experiments, getting continuous integration running on GitHub,  adding linting to the continuous integration, pre-commit hooks for VC, setting up data drifting detection and creating the CLI for it, making a pipeline to visualize data drifting with a histogram. I used GitHub Copilot in VSCode as a coding assistant. It was my first time using it and I really liked how much of the context it captures.
 
 Student s253080 was in charge of enforcing good coding practices in the project through the use of ruff and by adding comments in the code where needed, setting up configuration files, using Hydra for loading configurations and run reproducible experiments, getting continuous integration running on GitHub,  adding linting to the continuous integration, pre-commit hooks for VC, setting up data drifting detection and creating the CLI for it, making a pipeline to visualize data drifting with a histogram. I used GitHub Copilot in VSCode as a coding assistant. It was my first time using it and I really liked how much of the context it captures.
 
