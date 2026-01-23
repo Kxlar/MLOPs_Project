@@ -46,35 +46,22 @@ uv run python -c "import torch; print('OK')"
 
 
 
-## 3. Project Structure
+## 4. Project Structure
 ```text
-src/anomaly_detection/
-├── api.py                # FastAPI entrypoint
-├── service.py            # Backend service logic
-├── train.py              # Training
-├── inference.py          # Inference
-├── evaluate.py           # Evaluation
-├── hydra/
-│   ├── train_hydra.py
-│   ├── inference_hydra.py
-│   ├── evaluate_hydra.py
-│   ├── augment_hydra.py
-│   └── hydra_utils.py
-configs/
-├── train.yaml
-├── inference.yaml
-├── evaluate.yaml
-├── augment.yaml
-dockerfiles/
-├── train.dockerfile
-├── inference.dockerfile
-├── evaluation.dockerfile
-├── backend.dockerfile
-├── frontend.dockerfile
-
-
+MLOPs_Project/
+├── src/anomaly_detection/   # Core pipeline (training, inference, API)
+├── configs/                 # Hydra experiment configurations
+├── dockerfiles/             # Dockerfiles per pipeline stage
+├── docs/                    # MkDocs documentation
+├── data/                    # Input datasets (not versioned)
+├── models/                  # Saved memory banks / model artifacts
+├── logs/                    # Runtime logs
+├── results/                 # Evaluation outputs
+└── reports/                 # Generated reports
 ```
-## Invoke tasks
+
+
+### Invoke tasks
 ```bash
 uv run invoke --list
 ```
@@ -82,9 +69,9 @@ uv run invoke --list
 
 ---
 
-## 4. Minimal End-to-End Run
+## 5. Minimal End-to-End Run
 
-### 4.1 Data loading:
+### 5.1 Data loading:
 The project expects the MVTec AD dataset in the following structure:
 
 
@@ -96,7 +83,7 @@ uv run python src/anomaly_detection/data.py \
   --batch_size 8
 ```
 
-### 4.2 Build the memory bank:
+### 5.2 Build the memory bank:
 ```bash title="train.py"
 uv run python src/anomaly_detection/train.py \
   --data_root ./data/ \
@@ -112,7 +99,7 @@ This step:
 - builds a memory bank
 - saves model artifacts under models/
 
-### 4.3 Run inference:
+### 5.3 Run inference:
 ```bash title="inference.py"
 uv run python src/anomaly_detection/inference.py \
   --data_root ./data/ \
@@ -129,7 +116,7 @@ Outputs include:
 - anomaly heatmaps
 - anomaly scores
 
-### 4.4 Evaluate the model:
+### 5.4 Evaluate the model:
 ```bash title="evaluate.py"
 uv run python src/anomaly_detection/evaluate.py \
 --data_root ./data/ \
@@ -147,7 +134,7 @@ Evaluation outputs are written to:
 
 ---
 
-## 5. Run the API
+## 6. Run the API
 
 To start the FastAPI backend locally:
 ```bash
@@ -166,7 +153,7 @@ curl http://localhost:8000/health
 
 ---
 
-## 6. Run with Docker
+## 7. Run with Docker
 
 Build and run the backend API using Docker:
 ```bash
@@ -177,7 +164,7 @@ docker run -p 8000:8000 anomaly-backend
 
 ---
 
-## 7. Run BentoML API
+## 8. Run BentoML API
 Build and run the backend API using BentoML.
 
 Convert our model into a ONNX model:
