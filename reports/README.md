@@ -637,3 +637,5 @@ Finally, we worked on our github management skills, encountering some issues wit
 Student s254145 was in charge of setting up the github repo and the initial cookiecutter template, refactoring the DINOv3 repo to keep only mandatory scripts to run our model, CLI implementation, unit testing for data.py, model.py, train.py, inference.py and evaluate.py, both API backends (FastAPI and bentoML), ONNX conversion for bentoML, testing APIs and load testing.
 
 I (s253047) was in charge of Google Cloud related tasks, like managing the bucket, artifact repository, using the Engine, deploying and monitoring the application with Cloud Run. I used gemini to help me on some docker and yaml files, some bash commands and Cloud manipulations (connecting frontend and backend Run services for instance). They call me cloud wizard. They fear me.
+
+Student s204746 integrated the dataset, pretrained model, and weights into the cookiecutter project structure. implemented profiling, logging, Frontend (Streamlit) and developed the Mkdocs Report.
