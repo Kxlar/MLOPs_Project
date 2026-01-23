@@ -4,7 +4,7 @@
 - **pre-commit:** Runs checks automatically at commit/push.
 - **Pytest + Coverage:** Executed by a pre-commit hook to keep tests green.
 
-Configuration lives in [pyproject.toml](../../pyproject.toml) and [.pre-commit-config.yaml](../../.pre-commit-config.yaml).
+Configuration lives in `pyproject.toml` and `.pre-commit-config.yaml`.
 
 
 ### Format
