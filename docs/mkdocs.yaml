@@ -58,6 +58,5 @@ nav:
       - CI/CD: development/ci.md
       - Style & Linting: development/style.md
       - Hydra: development/hydra.md
-      - Profiling: development/profiling.md
-      - Logging: development/logging.md
+      - Profiling: development/logging-profiling.md
   - API Reference: my_api.md
