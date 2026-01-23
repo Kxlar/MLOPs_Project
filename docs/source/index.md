@@ -63,16 +63,11 @@ If you are new to the project, start here:
 ---
 
 ## Project Context
-This project was developed as part of the **02476 MLOps course at DTU**, with an emphasis on:
-
-- Clean code structure
-- Reproducibility
-- Automation
-- Deployment-ready ML systems
+This project was developed as part of the **02476 MLOps course at DTU**.
 
 ## Team Members
 
 - Lea
-- Pier
-- loic aka Cloud Wizard
+- Pierre-Eduard
+- loic (aka Cloud Wizard)
 - Jawhara
