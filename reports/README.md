@@ -256,7 +256,8 @@ The total code coverage of our code is 79% (this only takes into account python 
 >
 > Answer:
 
-We used branches but not PR in our project. In our group, each member had at least one branch that was kept up to date with main using merge and they were used to work on new features without disturbing others. Once someone had a feature working they went back to main and merged their branch. Then, they could go back to their branch, updating it by merging main and continue working.
+The entire team was not working in a similar fashion when it comes to merge and PRs. Some did the following : We used branches but not PR in our project. In our group, each member had at least one branch that was kept up to date with main using merge and they were used to work on new features without disturbing others. Once someone had a feature working they went back to main and merged their branch. Then, they could go back to their branch, updating it by merging main and continue working.
+Some made use of PRs, and when a feature was ready on their branch, they pushed their branch to GitHub and opened a PR into main. The PR ran automated checks (tests/linting) and the team could discuss new changes before merging. This kept main stable at any point, and made the collaboration easier.
 
 ### Question 10
 
@@ -288,7 +289,7 @@ We did not use DVC in this project. Incorporating DVC would have been highly ben
 >
 > Answer:
 
---- question 11 fill here ---
+We organized our continuous integration into 3 separate GitHub Actions workflows: one for unit testing with coverage, one for linting, and one for automated pre-commit hook updates. Our test workflow has unit tests with pytest and forces a minimum 50% code coverage threshold. We test across multiple operating systems (Ubuntu and Windows) and three Python versions (3.11, 3.12, 3.13). The linting workflow uses ruff to check code formatting and style across the same Python versions. All the workflows are triggered on pushes and pull requests into main. An example of our test workflow can be seen here: https://github.com/Kxlar/MLOPs_Project/blob/main/.github/workflows/tests.yaml
 
 ## Running code and tracking experiments
 
@@ -307,7 +308,10 @@ We did not use DVC in this project. Incorporating DVC would have been highly ben
 >
 > Answer:
 
---- question 12 fill here ---
+We configured experiments using Hydra with YAML configuration files stored in `configs/` (for example: `train.yaml`, `inference.yaml`, `evaluate.yaml`, `augment.yaml`). Each pipeline has a Hydra entrypoint in `src/anomaly_detection/hydra/` that loads the chosen config and allows changes from the command line
+
+For example, to build a memory bank with a different batch size we can  run:
+`uv run src/anomaly_detection/hydra/train_hydra.py data_root=./data class_name=carpet batch_size=16 augment=true`.
 
 ### Question 13
 
@@ -322,7 +326,12 @@ We did not use DVC in this project. Incorporating DVC would have been highly ben
 >
 > Answer:
 
---- question 13 fill here ---
+ All experiment parameters are stored in version-controlled Hydra YAML files in `configs/`. If we run the pipeline through the Hydra entrypoints, the full set of parameter can be reproduced simply by re-running the same set of command with the same overrides (for example : `batch_size=...`, `k=...`, `augment=...`)
+
+ All of our Python dependencies are in `pyproject.toml` + `uv.lock`, so a new machine can recreate the exact environment with `uv sync`.
+ To avoid losing results, we have written explicit paths where our results should be saved. For example with the memory bank saved to `./models/memory_bank.pt` and the evaluation metrics saved under `./results/`
+
+
 
 ### Question 14
 
@@ -339,7 +348,7 @@ We did not use DVC in this project. Incorporating DVC would have been highly ben
 >
 > Answer:
 
---- question 14 fill here ---
+We did not use Weights & Biases (W&B) in our project because we did not train or fine-tune a model ourselves. W&B is most valuable for experiment tracking during training, such as logging hyperparameters, monitoring loss/accuracy curves, comparing runs, and saving model checkpoints. Our work focused on deploying and running inference with an existing pre-trained model, so there were no training experiments to track or optimize.
 
 ### Question 15
 
@@ -455,7 +464,7 @@ Build screenshot:
 
 [![Build](figures/build.png)](figures/build.png)
 
-There is not much to see as the images that we succesfully used were built locally and pushed into the repository. In particular, we did not use triggers to build images automatically as we encountered issues with github permissions and some errors the github repo's owner tried enabling .
+There is not much to see as the images that we succesfully used were built locally and pushed into the repository. In particular, we did not use triggers to build images automatically as we encountered issues with github permissions, and some errors when the github repo's owner tried enabling GCP services.
 
 ### Question 22
 
@@ -470,7 +479,7 @@ There is not much to see as the images that we succesfully used were built local
 >
 > Answer:
 
-We managed to build the memory bank required by our model using the Compute Engine. Although it would have been possible to construct it locally, using the cloud engine provided access to more powerful hardware and allowed us to better manage resources. This approach is particularly useful for larger datasets or more computationally demanding tasks, as it gives flexibility to experiment with different machine types and configurations. By using the cloud, we could ensure that the process was reproducible and isolated, while also enabling easier collaboration among team members who may not have equivalent local hardware. Overall, this setup provided a reliable and scalable environment for building the memory bank.
+We managed to build the memory bank required by our model using the Compute Engine. Although it would have been possible to construct it locally, using the cloud engine provided access to more powerful hardware and allowed us to better manage resources. This approach is particularly useful for larger datasets or more computationally demanding tasks, as it gives flexibility to experiment with different machine types and configurations. By using the cloud, we could ensure that the process was reproducible and isolated, while also enabling easier collaboration among team members who may not have equivalent local hardware. This setup was useful and scalable environment for building the memory bank, or could be used for training some models even from scratch.
 
 
 ## Deployment
@@ -637,5 +646,9 @@ Finally, we worked on our github management skills, encountering some issues wit
 Student s254145 was in charge of setting up the github repo and the initial cookiecutter template, refactoring the DINOv3 repo to keep only mandatory scripts to run our model, CLI implementation, unit testing for data.py, model.py, train.py, inference.py and evaluate.py, both API backends (FastAPI and bentoML), ONNX conversion for bentoML, testing APIs and load testing.
 
 I (s253047) was in charge of Google Cloud related tasks, like managing the bucket, artifact repository, using the Engine, deploying and monitoring the application with Cloud Run. I used gemini to help me on some docker and yaml files, some bash commands and Cloud manipulations (connecting frontend and backend Run services for instance). They call me cloud wizard. They fear me.
+
+Student s253080 was in charge of enforcing good coding practices in the project through the use of ruff and by adding comments in the code where needed, setting up configuration files, using Hydra for loading configurations and run reproducible experiments, getting continuous integration running on GitHub,  adding linting to the continuous integration, pre-commit hooks for VC, setting up data drifting detection and creating the CLI for it, making a pipeline to visualize data drifting with a histogram. I used GitHub Copilot in VSCode as a coding assistant. It was my first time using it and I really liked how much of the context it captures.
+
+Student s253080 was in charge of enforcing good coding practices in the project through the use of ruff and by adding comments in the code where needed, setting up configuration files, using Hydra for loading configurations and run reproducible experiments, getting continuous integration running on GitHub,  adding linting to the continuous integration, pre-commit hooks for VC, setting up data drifting detection and creating the CLI for it, making a pipeline to visualize data drifting with a histogram. I used GitHub Copilot in VSCode as a coding assistant. It was my first time using it and I really liked how much of the context it captures.
 
 Student s204746 integrated the dataset, pretrained model, and weights into the cookiecutter project structure. implemented profiling, logging, Frontend (Streamlit) and developed the Mkdocs Report.
