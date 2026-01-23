@@ -16,11 +16,11 @@ This project explores whether vision foundation models can enable robust anomaly
 
 ---
 
-## Method at a Glance
-The pipeline is built around **DINOv3**, a self-supervised Vision Transformer:
+## Method 
+The pipeline is built around DINOv3, a self-supervised Vision Transformer:
 
 1. Extract patch-level features from normal training images
-2. Build a **memory bank** of normal visual patterns
+2. Build a memory bank of normal visual patterns
 3. Compare test image features against the memory bank using distance-based scoring
 4. Produce:
    - Image-level anomaly scores
@@ -31,15 +31,16 @@ The pipeline is built around **DINOv3**, a self-supervised Vision Transformer:
 ## Features
 The project supports:
 
-- 🧠 **Zero-shot feature extraction** using DINOv3
-- 🏦 **Memory bank construction** from normal samples
-- 🔥 **Pixel-level anomaly heatmaps**
-- 📊 **Image-level & pixel-level evaluation (ROC AUC)**
-- 🧪 **Data augmentation and drift simulation**
-- 🐳 **Dockerized training and inference**
-- 🚀 **FastAPI backend and frontend**
-- ☁️ **Cloud deployment (GCP-ready)**
-- 🔁 **Reproducible experiments with Hydra**
+- **Zero-shot feature extraction** using DINOv3
+- **Memory bank construction** from normal samples
+- **Pixel-level anomaly heatmaps**
+- **Image-level & pixel-level evaluation (ROC AUC)**
+- **Data augmentation and drift simulation**
+- **Dockerized training and inference**
+- **FastAPI backend and frontend**
+- **Cloud deployment (GCP-ready)**
+- **Reproducible experiments with Hydra**
+- among other MLOps implementations
 
 ---
 
@@ -68,3 +69,10 @@ This project was developed as part of the **02476 MLOps course at DTU**, with an
 - Reproducibility
 - Automation
 - Deployment-ready ML systems
+
+## Team Members
+
+- Lea
+- Pier
+- loic aka Cloud Wizard
+- Jawhara
