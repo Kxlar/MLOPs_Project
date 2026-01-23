@@ -8,9 +8,9 @@ It assumes no prior knowledge of the codebase.
 
 ## 1. System Requirements
 
-- Linux / macOS / Windows
-  *(Windows users should use WSL)*
-- Python ≥ 3.9 (3.13 recommended)
+- Linux / Windows /
+  *(We recommend that Windows users use WSL)*
+- Python ≥ 3.11 (3.13 recommended)
 - Docker
 - Git
 
