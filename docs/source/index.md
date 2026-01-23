@@ -14,6 +14,9 @@ Zero-shot anomaly detection addresses this challenge by learning only from **nor
 
 This project explores whether vision foundation models can enable robust anomaly detection without pre-training nor task-specific fine-tuning.
 
+![Input Defected Image vs. Defect heatmap overlay](reports/figures/anomal_detection.png)
+
+
 ---
 
 ## Method 
