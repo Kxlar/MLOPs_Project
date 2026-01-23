@@ -131,7 +131,7 @@ Outputs include:
 
 ### 4.4 Evaluate the model:
 ```bash title="evaluate.py"
-uv run python src/anomaly_detection/evaluate.py \  
+uv run python src/anomaly_detection/evaluate.py \
 --data_root ./data/ \
   --class_name carpet \
   --weights_path ./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth \
@@ -143,7 +143,7 @@ uv run python src/anomaly_detection/evaluate.py \
 ```
 
 Evaluation outputs are written to:
-- results/
+- results/figures/eval
 
 ---
 
@@ -151,7 +151,7 @@ Evaluation outputs are written to:
 
 To start the FastAPI backend locally:
 ```bash
-uv run python src/anomaly_detection/api.py
+uv run python src/anomaly_detection/API/api.py
 ```
 
 Open in browser:
@@ -174,5 +174,20 @@ docker build -f dockerfiles/backend.dockerfile -t anomaly-backend .
 docker run -p 8000:8000 anomaly-backend
 ```
 
+
+---
+
+## 7. Run BentoML API
+
+Build and run the backend API using BentoML:
+```bash
+bentoml build
+bentoml containerize anomaly_detection_service:latest
+```
+
+Copy the container tag and run:
+```bash
+docker run --rm -p 3000:3000 anomaly_detection_service:TAG
+```
 
 ---
