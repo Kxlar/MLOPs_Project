@@ -53,15 +53,6 @@ We use the **MVTec Anomaly Detection (MVTec AD)** dataset, a standard benchmark 
 
 ---
 
-## Getting Started
-If you are new to the project, start here:
-
-➡️ **[Getting Started](getting-started.md)**  
-➡️ **[Training Pipeline](pipeline/train.md)**  
-➡️ **[Inference & Heatmaps](pipeline/inference.md)**
-
----
-
 ## Project Context
 This project was developed as part of the **02476 MLOps course at DTU**.
 
