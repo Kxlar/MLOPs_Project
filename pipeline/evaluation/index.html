@@ -376,15 +376,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#run" class="md-nav__link">
-    Run
+  <a href="#arguments" class="md-nav__link">
+    Arguments
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#output" class="md-nav__link">
-    Output
+  <a href="#full-evaluation" class="md-nav__link">
+    Full evaluation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fast-re-evaluation-from-logs" class="md-nav__link">
+    Fast Re-Evaluation (From Logs)
   </a>
   
 </li>
@@ -737,15 +744,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#run" class="md-nav__link">
-    Run
+  <a href="#arguments" class="md-nav__link">
+    Arguments
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#output" class="md-nav__link">
-    Output
+  <a href="#full-evaluation" class="md-nav__link">
+    Full evaluation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fast-re-evaluation-from-logs" class="md-nav__link">
+    Fast Re-Evaluation (From Logs)
   </a>
   
 </li>
@@ -767,19 +781,38 @@
 
 <h1 id="evaluation-pipeline">Evaluation pipeline</h1>
 <p>The evaluation script quantitatively assesses the performance of the anomaly detection model on a labeled dataset. It compares predicted anomaly scores against ground-truth labels to compute evaluation metrics, enabling objective comparison of models, hyperparameters, and configurations in a reproducible way. We used logs on evaluation with key metrics such as image-level and pixel-level ROC AUC. Each run produces a timestamped log file in <code>logs/</code> for traceability.</p>
-<h3 id="run">Run</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>run<span class="w"> </span>src/anomaly_detection/evaluate.py<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--data_root<span class="w"> </span>./data/raw<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--class_name<span class="w"> </span>carpet<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--weights_path<span class="w"> </span>./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--memory_bank_path<span class="w"> </span>./models/memory_bank.pt
-</span></code></pre></div>
-<h3 id="output">Output</h3>
 <ul>
-<li>Recomputes anomaly maps</li>
-<li>Image-level AUC + histogram</li>
-<li>Pixel-level AUC if masks exist</li>
+<li>Metric Calculation: Computes Image-Level ROC AUC and, if masks are available, Pixel-Level ROC AUC.</li>
+<li>Visualization: Generates histograms of anomaly scores (Good vs. Defective) and Pixel ROC curves.</li>
+<li>Dual Modes: Can run full inference using a model and memory bank, or quickly re-evaluate using pre-computed scores from a JSONL log.</li>
 </ul>
+<h3 id="arguments">Arguments</h3>
+<p>--data_root: Path to the dataset root folder.</p>
+<p>--class_name: The specific object category to evaluate.</p>
+<p>--weights_path: Path to the pretrained DINOv3 model weights.</p>
+<p>--memory_bank_path: Path to the computed memory bank (.pt file).</p>
+<p>--output_dir: Directory to save results (plots and ROC curves); defaults to ./results.</p>
+<p>--k: Number of nearest neighbors to use for anomaly scoring (default: 10).</p>
+<p>--scores_jsonl: (Optional) Path to a JSONL file with pre-computed scores. If provided, skips inference and only generates histograms/metrics.</p>
+<p>--hist_only: (Optional) Flag to skip pixel-level evaluation for faster execution.</p>
+<h3 id="full-evaluation">Full evaluation</h3>
+<p>This command runs the full pipeline: loading the model, computing anomaly maps for the test set, and calculating both image and pixel-level AUC.
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>run<span class="w"> </span>src/anomaly_detection/evaluate.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--data_root<span class="w"> </span>./data/<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--class_name<span class="w"> </span>carpet<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--weights_path<span class="w"> </span>./models/dinov3_vitb16_pretrain.pth<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--memory_bank_path<span class="w"> </span>./models/checkpoints/memory_bank_carpet.pt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--output_dir<span class="w"> </span>./results<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--img_size<span class="w"> </span><span class="m">224</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--k<span class="w"> </span><span class="m">10</span>
+</span></code></pre></div></p>
+<h3 id="fast-re-evaluation-from-logs">Fast Re-Evaluation (From Logs)</h3>
+<p>If you have already run inference and saved scores, use this to quickly regenerate histograms or check Image AUC without reloading the heavy model.
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>run<span class="w"> </span>src/anomaly_detection/evaluate.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--class_name<span class="w"> </span>carpet<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--scores_jsonl<span class="w"> </span>./logs/inference_scores.jsonl<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--output_dir<span class="w"> </span>./results_reanalysis
+</span></code></pre></div></p>
 <hr />
 
 

@@ -356,15 +356,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#run-inference" class="md-nav__link">
-    Run inference
+  <a href="#what-it-does" class="md-nav__link">
+    What it does:
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
-    Inputs
+  <a href="#arguments" class="md-nav__link">
+    Arguments
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-inference-visuals-scores" class="md-nav__link">
+    Standard Inference (Visuals + Scores)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#heatmaps-only-faster-visualization" class="md-nav__link">
+    Heatmaps Only (Faster Visualization)
   </a>
   
 </li>
@@ -737,15 +751,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#run-inference" class="md-nav__link">
-    Run inference
+  <a href="#what-it-does" class="md-nav__link">
+    What it does:
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
-    Inputs
+  <a href="#arguments" class="md-nav__link">
+    Arguments
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-inference-visuals-scores" class="md-nav__link">
+    Standard Inference (Visuals + Scores)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#heatmaps-only-faster-visualization" class="md-nav__link">
+    Heatmaps Only (Faster Visualization)
   </a>
   
 </li>
@@ -766,40 +794,57 @@
 
 
 <h1 id="inference-pipeline">Inference pipeline</h1>
-<p>The inference performs offline anomaly detection on unseen images using a frozen DINOv3 feature extractor and a precomputed memory bank. It compares patch-level image features against the memory bank via k-nearest-neighbor distances to generate anomaly heatmaps, optional overlay visualizations, and per-image anomaly scores for analysis, visualization, and downstream evaluation—without retraining the model.</p>
-<h2 id="run-inference">Run inference</h2>
-<p>Example (test split):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/anomaly_detection/inference.py<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--data_root<span class="w"> </span>./data/raw<span class="w"> </span><span class="se">\</span>
+<p>This script runs the anomaly detection pipeline on new images using a pre-trained DINOv3 model and a pre-computed memory bank. It generates visual outputs (heatmaps and overlays) and quantitative data (anomaly scores) without retraining.</p>
+<ul>
+<li>Core Function: Loads a frozen DINOv3 model and a memory bank to compute anomaly scores for each image in the dataset.</li>
+<li>Visualization: Produces pixel-level anomaly heatmaps and overlays them onto the original images to localize defects.</li>
+<li>Scoring: Calculates a scalar anomaly score for each image (max value of the anomaly map) and can save these scores to a JSONL file for later analysis.</li>
+</ul>
+<h2 id="what-it-does">What it does:</h2>
+<ol>
+<li>Loads a test image and the pre-computed memory bank (.pt file).</li>
+<li>Loads the frozen DINOv3 feature extractor.</li>
+<li>Computes anomaly maps by comparing image patches to the memory bank (k-NN).</li>
+<li>Generates and saves visual outputs (heatmaps and overlays).</li>
+<li>Calculates per-image anomaly scores and logs them to a JSONL file.</li>
+</ol>
+<h2 id="arguments">Arguments</h2>
+<p>--data_root: Path to the root directory of the dataset.</p>
+<p>--class_name: The object category to analyze.</p>
+<p>--weights_path: Path to the pretrained DINOv3 model weights.</p>
+<p>--memory_bank_path: Path to the saved memory bank (.pt file).</p>
+<p>--output_dir: Directory where results will be saved; defaults to ./results/figures.</p>
+<p>--output_name: (Optional) Custom name for the output folder; defaults to the class name.</p>
+<p>--split: The dataset split to run inference on (train or test); defaults to test.</p>
+<p>--save_heatmaps: Flag to enable saving of anomaly heatmaps (enabled by default).</p>
+<p>--save_overlays: Flag to enable saving of heatmaps overlaid on original images (enabled by default).</p>
+<p>--heatmaps_only: Convenience flag to disable overlays and save only the heatmaps.</p>
+<p>--scores_jsonl: (Optional) Path to save per-image anomaly scores and labels in JSONL format.</p>
+<p>--img_size: Target image size for resizing (default: 224).</p>
+<p>--batch_size: Batch size for data loading (default: 8).</p>
+<p>--k: Number of nearest neighbors to use for anomaly scoring (default: 10).</p>
+<h2 id="standard-inference-visuals-scores">Standard Inference (Visuals + Scores)</h2>
+<p>This is the most common use case: generating heatmaps, overlays, and a score log for the test set.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>run<span class="w"> </span>src/anomaly_detection/inference.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--data_root<span class="w"> </span>./data/<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--class_name<span class="w"> </span>carpet<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--weights_path<span class="w"> </span>./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--weights_path<span class="w"> </span>./models/dinov3_vitb16_pretrain.pth<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--memory_bank_path<span class="w"> </span>./models/memory_bank.pt<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--output_dir<span class="w"> </span>./results/figures<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--img_size<span class="w"> </span><span class="m">224</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--batch_size<span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--k<span class="w"> </span><span class="m">10</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--scores_jsonl<span class="w"> </span>./logs/inference_scores.jsonl<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--save_heatmaps<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>--save_overlays<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>--k<span class="w"> </span><span class="m">10</span>
 </span></code></pre></div>
-<h2 id="inputs">Inputs</h2>
-<p><strong>Required:</strong></p>
-<ul>
-<li><code>--data_root</code></li>
-<li><code>--class_name</code></li>
-<li><code>--weights_path</code></li>
-<li><code>--memory_bank_path</code></li>
-</ul>
-<p><strong>Optional (common):</strong></p>
-<ul>
-<li><code>--output_dir</code> (default <code>./results/figures</code>)</li>
-<li><code>--split</code> (<code>test</code> by default)</li>
-<li><code>--k</code> top-k neighbors (default 10)</li>
-</ul>
-<p><strong>Saving options:</strong></p>
-<ul>
-<li><code>--save_heatmaps</code></li>
-<li><code>--save_overlays</code></li>
-<li><code>--heatmaps_only</code></li>
-<li><code>--scores_jsonl &lt;path&gt;</code></li>
-</ul>
+<h2 id="heatmaps-only-faster-visualization">Heatmaps Only (Faster Visualization)</h2>
+<p>Use this when you only need to inspect the raw anomaly signal without the context of the original image (saves disk space and time).
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>run<span class="w"> </span>src/anomaly_detection/inference.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--data_root<span class="w"> </span>./data/<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--class_name<span class="w"> </span>carpet<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--weights_path<span class="w"> </span>./models/dinov3_vitb16_pretrain.pth<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--memory_bank_path<span class="w"> </span>./models/memory_bank.pt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--heatmaps_only
+</span></code></pre></div></p>
 <hr />
 
 

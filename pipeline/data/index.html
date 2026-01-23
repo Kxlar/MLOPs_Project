@@ -319,22 +319,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-data-loading" class="md-nav__link">
-    2. Data loading
+  <a href="#2-data-module-documentation" class="md-nav__link">
+    2. Data Module Documentation
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-folder-structure" class="md-nav__link">
-    3. Folder structure
+  <a href="#what-it-does" class="md-nav__link">
+    What it does:
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-data-augmentation" class="md-nav__link">
-    4. Data augmentation
+  <a href="#arguments" class="md-nav__link">
+    Arguments
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-data-loading" class="md-nav__link">
+    Verify Data Loading
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#folder-structure" class="md-nav__link">
+    Folder structure
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-a-drifted-dataset-data-augmentation" class="md-nav__link">
+    Generate a "Drifted" Dataset (data augmentation)
   </a>
   
 </li>
@@ -752,22 +773,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-data-loading" class="md-nav__link">
-    2. Data loading
+  <a href="#2-data-module-documentation" class="md-nav__link">
+    2. Data Module Documentation
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-folder-structure" class="md-nav__link">
-    3. Folder structure
+  <a href="#what-it-does" class="md-nav__link">
+    What it does:
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-data-augmentation" class="md-nav__link">
-    4. Data augmentation
+  <a href="#arguments" class="md-nav__link">
+    Arguments
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify-data-loading" class="md-nav__link">
+    Verify Data Loading
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#folder-structure" class="md-nav__link">
+    Folder structure
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-a-drifted-dataset-data-augmentation" class="md-nav__link">
+    Generate a "Drifted" Dataset (data augmentation)
   </a>
   
 </li>
@@ -796,16 +838,36 @@
 </span></code></pre></div>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>./setup.sh
 </span></code></pre></div></p>
-<h2 id="2-data-loading">2. Data loading</h2>
-<p>The data module (<code>src/anomaly_detection/data.py</code>) is responsible for:</p>
+<h2 id="2-data-module-documentation">2. Data Module Documentation</h2>
+<p>The data.py script handles data loading, preprocessing, and synthetic data generation (drift simulation). It manages the MVTec AD dataset for both training (normal only) and testing (normal + anomalies).</p>
 <ul>
-<li>Loading images from the dataset folders</li>
-<li>Creating PyTorch datasets and dataloaders</li>
-<li>Applying resizing, normalization, and optional augmentations</li>
-<li>Loading pixel-level ground-truth masks (for evaluation)</li>
-<li>(Optional) Saving an augmented (“drifted”) dataset to disk</li>
+<li>Dataset Handling: Manages train/test splits, ensuring only "good" data is used for training while the test set includes anomalies with binary labels.</li>
+<li>Preprocessing: Applies resizing and normalization using ImageNet statistics.</li>
+<li>Augmentation Pipeline: Supports on-the-fly or offline augmentations (Rotation, Color Jitter, Blur) to simulate data drift or increase robustness.</li>
 </ul>
-<p>To verify you have the dataset in the correct structure, load dataset</p>
+<h2 id="what-it-does">What it does:</h2>
+<ol>
+<li>Scans the file system to load MVTec images (train/test splits).</li>
+<li>Applies preprocessing (resizing, normalization) and optional augmentations (rotation, blur, color jitter).</li>
+<li>Loads pixel-level ground-truth masks for defect evaluation.</li>
+<li>(CLI mode) Generates and saves a synthetic "drifted" dataset to disk for robustness testing.</li>
+</ol>
+<h2 id="arguments">Arguments</h2>
+<p>--data_root: Path to the root directory of the dataset.</p>
+<p>--class_name: The object category to analyze (e.g., carpet).</p>
+<p>--img_size: Target image size for resizing (default: 224).</p>
+<p>--batch_size: Batch size for data loading (default: 8).</p>
+<p>--augment: Flag to enable data augmentation.</p>
+<p>--aug_types: List of augmentations to apply. Choices: rotation, color, blur.</p>
+<p>--aug_multiplier: Number of augmentations per image (only used in save mode).</p>
+<p>--rot_degrees: Maximum degrees for rotation augmentation.</p>
+<p>--blur_kernel: Kernel size for Gaussian blur.</p>
+<p>--save_aug_path: Path to save the augmented images. If provided, the script runs in "save mode" instead of loading mode.</p>
+<p>--save_aug_dataset_name: Name of the output dataset folder.</p>
+<p>--split: Which split to process/save (train or test).</p>
+<p>--include_anomalies: Flag to include defect folders when generating drifted data for the test split.</p>
+<h2 id="verify-data-loading">Verify Data Loading</h2>
+<p>Run this to initialize the dataloaders and check sample counts without saving any files. This confirms the dataset structure is correct.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/anomaly_detection/data.py<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--data_root<span class="w"> </span>./data/<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--class_name<span class="w"> </span>carpet<span class="w"> </span><span class="se">\</span>
@@ -813,7 +875,7 @@
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--batch_size<span class="w"> </span><span class="m">8</span>
 </span></code></pre></div>
 <hr />
-<h2 id="3-folder-structure">3. Folder structure</h2>
+<h2 id="folder-structure">Folder structure</h2>
 <p>Dataset folder structure:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>data/
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>└── carpet/
@@ -834,29 +896,22 @@
 </span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>        └── ...
 </span></code></pre></div>
 <hr />
-<h2 id="4-data-augmentation">4. Data augmentation</h2>
-<p>Users can perform data augmentation on a chosen dataset:
-- Modify the contrast
-- Modify the brightness
-- Modify the saturation
-- Modify the blur
-- Add rotations</p>
+<h2 id="generate-a-drifted-dataset-data-augmentation">Generate a "Drifted" Dataset (data augmentation)</h2>
 <p>Run this to apply augmentations (color, blur and rotation) to the test set and save the images to disk. This is useful for testing model robustness against domain shifts.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>uv<span class="w"> </span>run<span class="w"> </span>./src/anomaly_detection/data.py<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--data_root<span class="w"> </span>./data/<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--class_name<span class="w"> </span>carpet<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--augment<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--aug_types<span class="w"> </span>rotation<span class="w"> </span>color<span class="w"> </span>blur<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--aug_multiplier<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--rot_degrees<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--color_brightness<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--color_contrast<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--color_saturation<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--blur_kernel<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--save_aug_path<span class="w"> </span>./data/augmented<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--save_aug_dataset_name<span class="w"> </span>carpet_augmented<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--split<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>--include_anomalies
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--save_aug_path<span class="w"> </span>./data/augmented<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--save_aug_dataset_name<span class="w"> </span>carpet_augmented<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--split<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--augment<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--aug_types<span class="w"> </span>rotation<span class="w"> </span>color<span class="w"> </span>blur<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--aug_multiplier<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--rot_degrees<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--color_brightness<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--color_contrast<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--blur_kernel<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--include_anomalies
 </span></code></pre></div>
 
 

@@ -336,13 +336,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#training" class="md-nav__link">
-    Training
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#what-it-does" class="md-nav__link">
     What it does:
   </a>
@@ -350,8 +343,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
-    Inputs
+  <a href="#arguments" class="md-nav__link">
+    Arguments
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-memory-bank-construction" class="md-nav__link">
+    Standard Memory Bank Construction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#robust-memory-bank-with-augmentation" class="md-nav__link">
+    Robust Memory Bank (with Augmentation)
   </a>
   
 </li>
@@ -744,13 +751,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#training" class="md-nav__link">
-    Training
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#what-it-does" class="md-nav__link">
     What it does:
   </a>
@@ -758,8 +758,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inputs" class="md-nav__link">
-    Inputs
+  <a href="#arguments" class="md-nav__link">
+    Arguments
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-memory-bank-construction" class="md-nav__link">
+    Standard Memory Bank Construction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#robust-memory-bank-with-augmentation" class="md-nav__link">
+    Robust Memory Bank (with Augmentation)
   </a>
   
 </li>
@@ -780,15 +794,12 @@
 
 
 <h1 id="training-pipeline-memory-bank">Training pipeline (memory bank)</h1>
-<p>Training in this project means: build a memory bank of normal (good) features using DINOv3 features </p>
-<h2 id="training">Training</h2>
-<p>To build the memory bank, run:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>run<span class="w"> </span>src/anomaly_detection/train.py<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--data_root<span class="w"> </span>./data/raw<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--class_name<span class="w"> </span>carpet<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--weights_path<span class="w"> </span>./models/dinov3.pth<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--save_path<span class="w"> </span>./models/memory_bank.pt
-</span></code></pre></div>
+<p>In this Zero-Shot framework, "training" does not involve gradient updates. Instead, this script builds a Memory Bank of features from normal data.</p>
+<ul>
+<li>Feature Extraction: Runs the frozen DINOv3 model on the training set (only "good" images) to extract high-level feature representations.</li>
+<li>Memory Bank Construction: Aggregates these feature vectors into a single tensor, acting as the "reference" for normality.</li>
+<li>Persistence: Saves the resulting tensor (.pt) to disk, which is required by the inference and evaluation modules.</li>
+</ul>
 <h2 id="what-it-does">What it does:</h2>
 <ol>
 <li>Loads training images (<code>train/good/</code>)</li>
@@ -797,19 +808,37 @@
 <li>Builds a memory bank tensor</li>
 <li>Saves it as a <code>.pt</code> file</li>
 </ol>
-<hr />
-<h2 id="inputs">Inputs</h2>
-<p><strong>Required</strong></p>
-<ul>
-<li><code>--data_root</code>: dataset root (e.g. <code>./data/raw</code>)</li>
-<li><code>--class_name</code>: MVTec class (e.g. <code>carpet</code>)</li>
-<li><code>--weights_path</code>: path to DINOv3 weights file</li>
-</ul>
-<p><strong>Optional</strong></p>
-<ul>
-<li><code>--save_path</code>: where to write the memory bank (default: <code>./models/memory_bank.pt</code>)</li>
-<li><code>--img_size</code>, <code>--batch_size</code></li>
-</ul>
+<h2 id="arguments">Arguments</h2>
+<p>--data_root: Path to the dataset root directory.</p>
+<p>--class_name: The specific object category to model.</p>
+<p>--weights_path: Path to the pretrained DINOv3 model weights.</p>
+<p>--save_path: File path where the memory bank .pt file will be saved. Defaults to ./models/memory_bank.pt.</p>
+<p>--img_size: Target image size for resizing (default: 224). Must match the size used during inference.</p>
+<p>--batch_size: Number of images processed at once (default: 8).</p>
+<p>--augment: (Optional) Enable data augmentation during memory bank creation. Typically False for standard banks, but can be used to build robust banks.</p>
+<p>--aug_types: (Optional) List of augmentations to apply if --augment is set (e.g., rotation, color, blur).</p>
+<h2 id="standard-memory-bank-construction">Standard Memory Bank Construction</h2>
+<p>This is the default usage: it processes the "good" training images and creates a standard reference bank.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>run<span class="w"> </span>src/anomaly_detection/train.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--data_root<span class="w"> </span>./data/<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--class_name<span class="w"> </span>carpet<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--weights_path<span class="w"> </span>./models/dinov3_vitb16_pretrain.pth<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--save_path<span class="w"> </span>./models/checkpoints/memory_bank_carpet.pt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--img_size<span class="w"> </span><span class="m">224</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--batch_size<span class="w"> </span><span class="m">16</span>
+</span></code></pre></div>
+<h2 id="robust-memory-bank-with-augmentation">Robust Memory Bank (with Augmentation)</h2>
+<p>If you expect the test environment to have specific variations (e.g., slight rotations or lighting changes) that should be considered "normal," you can inject them into the memory bank directly.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>run<span class="w"> </span>src/anomaly_detection/train.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--data_root<span class="w"> </span>./data/<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--class_name<span class="w"> </span>carpet<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--weights_path<span class="w"> </span>./models/dinov3_vitb16_pretrain.pth<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--save_path<span class="w"> </span>./models/checkpoints/memory_bank_carpet_robust.pt<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--augment<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--aug_types<span class="w"> </span>rotation<span class="w"> </span>color<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--rot_degrees<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--color_brightness<span class="w"> </span><span class="m">0</span>.1
+</span></code></pre></div>
 <hr />
 
 
