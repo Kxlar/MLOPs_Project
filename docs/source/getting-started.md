@@ -90,7 +90,7 @@ The project expects the MVTec AD dataset in the following structure:
 
 ```bash title="data.py"
 uv run python src/anomaly_detection/data.py \
-  --data_root ./data/raw \
+  --data_root ./data/ \
   --class_name carpet \
   --img_size 224 \
   --batch_size 8
@@ -99,7 +99,7 @@ uv run python src/anomaly_detection/data.py \
 ### 4.2 Build the memory bank:
 ```bash title="train.py"
 uv run python src/anomaly_detection/train.py \
-  --data_root ./data/raw \
+  --data_root ./data/ \
   --class_name carpet \
   --weights_path ./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth \
   --save_path ./models/memory_bank.pt \
@@ -115,14 +115,14 @@ This step:
 ### 4.3 Run inference:
 ```bash title="inference.py"
 uv run python src/anomaly_detection/inference.py \
-  --data_root ./data/raw \
+  --data_root ./data/ \
   --class_name carpet \
   --weights_path ./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth \
   --memory_bank_path ./models/memory_bank.pt \
-  --output_dir ./reports/figures \
+  --output_dir ./results/figures \
   --img_size 224 \
   --batch_size 8 \
-  --k 10
+  --k 1
 ```
 
 Outputs include:
@@ -131,12 +131,12 @@ Outputs include:
 
 ### 4.4 Evaluate the model:
 ```bash title="evaluate.py"
-uv run python src/anomaly_detection/evaluate.py \
-  --data_root ./data/raw \
+uv run python src/anomaly_detection/evaluate.py \  
+--data_root ./data/ \
   --class_name carpet \
   --weights_path ./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth \
   --memory_bank_path ./models/memory_bank.pt \
-  --output_dir ./reports/figures/eval \
+  --output_dir ./results/figures/eval \
   --img_size 224 \
   --batch_size 8 \
   --k 10
