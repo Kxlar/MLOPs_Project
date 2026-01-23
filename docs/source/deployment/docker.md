@@ -35,6 +35,36 @@ uv run uvicorn src.anomaly_detection.api:app --host 0.0.0.0 --port 8000
 
 We experimented with a BentoML backend but ultimately settled on FastAPI for simplicity and consistency with the rest of the stack.
 
+For BentoML app to do inference:
+
+1. Initialize bentoml
+```bash
+uv run bentoml --version
+```
+2. Convert the torch model into a ONNX model
+```bash
+uv run export_onnx_paranoid.py
+```
+3. Build the bento container
+```bash
+uv run bentoml build
+```
+4. Launch docker in the background. bBuild the docker container based on the bento - replace TAG by the number that shows up after step 3
+```bash
+bentoml containerize anomaly_detection_service:<TAG>
+```
+5. Run the container
+```bash
+docker run --rm -p 3000:3000 anomaly_detection_service:<TAG>
+```
+
+6. To use the backend, go to http://localhost:3000 
+
+OR (once the docker image is running) in new terminal run:
+```bash
+uv run src/anomaly_detection/api_inference.py
+```
+
 ## 3. Frontend UI (Streamlit)  — `frontend.dockerfile`
 
 Runs a Streamlit web interface for uploading images and calling the backend API. Designed to work both locally and on Google Cloud Run (uses $PORT).
@@ -77,20 +107,3 @@ docker run --rm anomaly-infer
 Runs an end-to-end data drift experiment at container runtime via an entrypoint script (not during image build). Typical steps include generating drifted datasets, running the API, calling it, and producing plots.
 
 Building and running the docker for data drifting is shown in section Pipeline/ Data Drift.
-
-### Build & run
-```bash
-docker build -f data_drift_demo.dockerfile -t mlops-data-drift-demo .
-```
-```bash
-docker run --rm `
-  -v "$((Get-Location).Path)\data:/app/data" `
-  -v "$((Get-Location).Path)\models:/app/models" `
-  -v "$((Get-Location).Path)\results:/app/results" `
-  -e COLOR_CONTRAST=0.6 `
-  -e CLASS_NAME=carpet `
-  -e DATA_ROOT=/app/data `
-  -e OUT_ROOT=/app/results/data_drift `
-  mlops-data-drift-demo
-
-```
