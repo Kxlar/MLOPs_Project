@@ -15,7 +15,7 @@ from src.anomaly_detection.hydra.hydra_utils import cfg_to_namespace
 from src.anomaly_detection.inference import run
 
 
-@hydra.main(version_base=None, config_path="../../configs", config_name="inference")
+@hydra.main(version_base=None, config_path="../../../configs", config_name="inference")
 def main(cfg: DictConfig) -> None:
     args = cfg_to_namespace(cfg)
     run(args)

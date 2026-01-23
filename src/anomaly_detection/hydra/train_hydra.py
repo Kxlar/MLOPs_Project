@@ -15,8 +15,7 @@ if str(project_root) not in sys.path:
 from src.anomaly_detection.hydra.hydra_utils import cfg_to_namespace
 from src.anomaly_detection.train import run
 
-
-@hydra.main(version_base=None, config_path="../../configs", config_name="train")
+@hydra.main(version_base=None, config_path="../../../configs", config_name="train")
 def main(cfg: DictConfig) -> None:
     args = cfg_to_namespace(cfg)
     run(args)

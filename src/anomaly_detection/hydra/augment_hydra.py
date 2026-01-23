@@ -15,7 +15,7 @@ from src.anomaly_detection.hydra.hydra_utils import cfg_to_namespace
 from src.anomaly_detection.data import save_augmented_dataset
 
 
-@hydra.main(version_base=None, config_path="../../configs", config_name="augment")
+@hydra.main(version_base=None, config_path="../../../configs", config_name="augment")
 def main(cfg: DictConfig) -> None:
     args = cfg_to_namespace(cfg)
     save_augmented_dataset(args)
