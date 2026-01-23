@@ -37,9 +37,3 @@ Install hooks so they run automatically on `git commit`:
 ```powershell
 uv run pre-commit install
 ```
-## Viewing This Page
-If `mkdocs serve` is running, edits here live-reload:
-```powershell
-uv run mkdocs serve -f docs/mkdocs.yaml
-```
-This page is under Development → Style & Linting in the site navigation.
