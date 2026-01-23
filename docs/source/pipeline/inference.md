@@ -8,6 +8,14 @@ This script runs the anomaly detection pipeline on new images using a pre-traine
 - Visualization: Produces pixel-level anomaly heatmaps and overlays them onto the original images to localize defects.
 - Scoring: Calculates a scalar anomaly score for each image (max value of the anomaly map) and can save these scores to a JSONL file for later analysis.
 
+## What it does:
+
+1. Loads a test image and the pre-computed memory bank (.pt file).
+2. Loads the frozen DINOv3 feature extractor.
+3. Computes anomaly maps by comparing image patches to the memory bank (k-NN).
+4. Generates and saves visual outputs (heatmaps and overlays).
+5. Calculates per-image anomaly scores and logs them to a JSONL file.
+
 ## Arguments
 --data_root: Path to the root directory of the dataset.
 
