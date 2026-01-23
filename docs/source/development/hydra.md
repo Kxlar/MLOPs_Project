@@ -3,9 +3,10 @@
 ### Run (Hydra scripts)
 ```bash
 uv sync
-uv run src/anomaly_detection/evaluate_hydra.py
-uv run src/anomaly_detection/inference_hydra.py
-uv run src/anomaly_detection/augment_hydra.py
+uv run python -m anomaly_detection.hydra.train_hydra
+uv run python -m anomaly_detection.hydra.evaluate_hydra
+uv run python -m anomaly_detection.hydra.inference_hydra
+uv run python -m anomaly_detection.hydra.augment_hydra
 ```
 
 ### Override parameters (example)

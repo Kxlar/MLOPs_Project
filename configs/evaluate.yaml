@@ -6,7 +6,7 @@ hydra:
   job:
     chdir: false
 
-data_root: ./data
+data_root: ./data/raw
 class_name: carpet
 img_size: 224
 batch_size: 8
@@ -25,3 +25,8 @@ memory_bank_path: ./models/memory_bank.pt
 
 k: 10
 output_dir: ./results
+
+scores_jsonl: null
+hist_only: false
+
+
