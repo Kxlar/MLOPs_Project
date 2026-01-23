@@ -507,13 +507,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#using-the-frontend" class="md-nav__link">
-    Using the Frontend
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -725,25 +718,6 @@
   
 
     
-      
-      
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../my_api/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    API Reference
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -815,13 +789,6 @@
           <li class="md-nav__item">
   <a href="#2-running-the-frontend-streamlit" class="md-nav__link">
     2. Running the Frontend (Streamlit)
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-the-frontend" class="md-nav__link">
-    Using the Frontend
   </a>
   
 </li>
@@ -1000,8 +967,6 @@ Entrypoint</p>
 <h2 id="3-frontend-ui-streamlit-frontenddockerfile">3. Frontend UI (Streamlit)  — <code>frontend.dockerfile</code></h2>
 <p>This project includes a lightweight Streamlit frontend that allows users to
 upload an image and run anomaly detection through the backend API.</p>
-<p>The frontend does not perform inference itself — it acts as a client that
-sends images to the FastAPI backend and displays the returned prediction.</p>
 <hr />
 <h3 id="1-running-the-backend-required">1. Running the Backend (Required)</h3>
 <p>The frontend expects the backend to be available at:
@@ -1025,31 +990,6 @@ URL: http://0.0.0.0:8501</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>http://localhost:8501
 </span></code></pre></div></p>
 <hr />
-<h3 id="using-the-frontend">Using the Frontend</h3>
-<ol>
-<li>
-<p>Open the Streamlit page</p>
-</li>
-<li>
-<p>Upload an image from the MVTec dataset (or a compatible image)</p>
-</li>
-<li>
-<p>Click Run prediction</p>
-</li>
-</ol>
-<p>The frontend will:</p>
-<ul>
-<li>
-<p>Send the image to /predict</p>
-</li>
-<li>
-<p>Wait for the backend response</p>
-</li>
-<li>
-<p>Display prediction results</p>
-</li>
-</ul>
-<hr />
 <h2 id="4-training-traindockerfile">4. Training — <code>train.dockerfile</code></h2>
 <p>Runs the training pipeline in a fully reproducible container.</p>
 <h3 id="build-run_1">Build &amp; run</h3>
@@ -1069,8 +1009,8 @@ URL: http://0.0.0.0:8501</p>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>anomaly-infer
 </span></code></pre></div>
 <h2 id="7-data-drifting-demo-data_drift_demodockerfile">7. Data drifting Demo — <code>data_drift_demo.dockerfile</code></h2>
-<p>Runs an end-to-end data drift experiment at container runtime via an entrypoint script (not during image build). Typical steps include generating drifted datasets, running the API, calling it, and producing plots.</p>
-<p>Building and running the docker for data drifting is shown in section Pipeline/ Data Drift.</p>
+<p>Runs an end-to-end data drift experiment at container runtime via an entrypoint script (not during image build).</p>
+<p>Details are provided in <strong>Pipeline → Data Drift</strong>.</p>
 
 
 

@@ -642,25 +642,6 @@
   
 
     
-      
-      
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="my_api/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    API Reference
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -760,6 +741,7 @@
 <p>In manufacturing, collecting and labeling defective samples is often expensive, time-consuming, or impractical.<br />
 Zero-shot anomaly detection addresses this challenge by learning only from <strong>normal (defect-free) data</strong> and identifying deviations at inference time.</p>
 <p>This project explores whether vision foundation models can enable robust anomaly detection without pre-training nor task-specific fine-tuning.</p>
+<p><img alt="Anomaly detection" src="assets/images/anomal_detection.png" /></p>
 <hr />
 <h2 id="method">Method</h2>
 <p>The pipeline is built around DINOv3, a self-supervised Vision Transformer:</p>
@@ -767,9 +749,9 @@ Zero-shot anomaly detection addresses this challenge by learning only from <stro
 <li>Extract patch-level features from normal training images</li>
 <li>Build a memory bank of normal visual patterns</li>
 <li>Compare test image features against the memory bank using distance-based scoring</li>
-<li>Produce:</li>
-<li>Image-level anomaly scores</li>
-<li>Pixel-level anomaly heatmaps</li>
+<li>Produce:
+   -- Image-level anomaly scores
+   -- Pixel-level anomaly heatmaps</li>
 </ol>
 <hr />
 <h2 id="features">Features</h2>
