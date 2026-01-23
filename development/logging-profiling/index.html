@@ -431,46 +431,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/api/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    API (FastAPI)
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../deployment/frontend/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Frontend
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../deployment/cloud/" class="md-nav__link">
         
   
@@ -529,46 +489,6 @@
             Development
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tests/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Tests
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../ci/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    CI/CD
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -724,16 +644,6 @@ The profiling results were visualized using SnakeViz:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>add<span class="w"> </span>snakeviz
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uv<span class="w"> </span>run<span class="w"> </span>snakeviz<span class="w"> </span>evaluate.prof
 </span></code></pre></div>
-<h1 id="logging">Logging</h1>
-<p>Training and evaluation scripts use Loguru for lightweight logging.</p>
-<ul>
-<li>Logs are printed to the terminal</li>
-<li>Logs are also written to <code>logs/</code></li>
-<li>Log files are timestamped per run</li>
-</ul>
-<p>This helps with debugging and reproducibility without cluttering the codebase.</p>
-<p>Evaluation logs key metrics such as image-level and pixel-level ROC AUC.
-Each run produces a timestamped log file in <code>logs/</code> for traceability.</p>
 
 
 

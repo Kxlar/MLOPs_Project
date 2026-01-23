@@ -14,7 +14,7 @@
         <link rel="prev" href="../../pipeline/data_drift/">
       
       
-        <link rel="next" href="../api/">
+        <link rel="next" href="../cloud/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -494,8 +494,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#build-run-local" class="md-nav__link">
-    Build &amp; run (local)
+  <a href="#1-running-the-backend-required" class="md-nav__link">
+    1. Running the Backend (Required)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-running-the-frontend-streamlit" class="md-nav__link">
+    2. Running the Frontend (Streamlit)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-the-frontend" class="md-nav__link">
+    Using the Frontend
   </a>
   
 </li>
@@ -587,46 +601,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    API (FastAPI)
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../frontend/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Frontend
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../cloud/" class="md-nav__link">
         
   
@@ -683,46 +657,6 @@
             Development
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../development/tests/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Tests
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../development/ci/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    CI/CD
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -872,8 +806,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#build-run-local" class="md-nav__link">
-    Build &amp; run (local)
+  <a href="#1-running-the-backend-required" class="md-nav__link">
+    1. Running the Backend (Required)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-running-the-frontend-streamlit" class="md-nav__link">
+    2. Running the Frontend (Streamlit)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-the-frontend" class="md-nav__link">
+    Using the Frontend
   </a>
   
 </li>
@@ -1050,28 +998,75 @@ Entrypoint</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>uv<span class="w"> </span>run<span class="w"> </span>src/anomaly_detection/api_inference.py
 </span></code></pre></div></p>
 <h2 id="3-frontend-ui-streamlit-frontenddockerfile">3. Frontend UI (Streamlit)  — <code>frontend.dockerfile</code></h2>
-<p>Runs a Streamlit web interface for uploading images and calling the backend API. Designed to work both locally and on Google Cloud Run (uses $PORT).</p>
-<h3 id="build-run-local">Build &amp; run (local)</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>docker<span class="w"> </span>build<span class="w"> </span>-f<span class="w"> </span>frontend.dockerfile<span class="w"> </span>-t<span class="w"> </span>anomaly-frontend<span class="w"> </span>.
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">8080</span>:8080<span class="w"> </span>-e<span class="w"> </span><span class="nv">PORT</span><span class="o">=</span><span class="m">8080</span><span class="w"> </span>anomaly-frontend
+<p>This project includes a lightweight Streamlit frontend that allows users to
+upload an image and run anomaly detection through the backend API.</p>
+<p>The frontend does not perform inference itself — it acts as a client that
+sends images to the FastAPI backend and displays the returned prediction.</p>
+<hr />
+<h3 id="1-running-the-backend-required">1. Running the Backend (Required)</h3>
+<p>The frontend expects the backend to be available at:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>http://127.0.0.1:8000
+</span></code></pre></div></p>
+<p>Start the backend in a dedicated terminal and keep it running:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">cd</span><span class="w"> </span>~/projects/MLOPs_Project
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>uv<span class="w"> </span>run<span class="w"> </span>uvicorn<span class="w"> </span>src.anomaly_detection.api:app<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
 </span></code></pre></div>
+<h3 id="2-running-the-frontend-streamlit">2. Running the Frontend (Streamlit)</h3>
+<p>Open a second terminal and run:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">cd</span><span class="w"> </span>~/projects/MLOPs_Project
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>uv<span class="w"> </span>run<span class="w"> </span>streamlit<span class="w"> </span>run<span class="w"> </span>frontend/frontend.py<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--server.port<span class="w"> </span><span class="m">8501</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--server.address<span class="w"> </span><span class="m">0</span>.0.0.0
+</span></code></pre></div>
+<p>You should see:</p>
+<p>You can now view your Streamlit app in your browser.
+URL: http://0.0.0.0:8501</p>
+<p>Open in your browser:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>http://localhost:8501
+</span></code></pre></div></p>
+<hr />
+<h3 id="using-the-frontend">Using the Frontend</h3>
+<ol>
+<li>
+<p>Open the Streamlit page</p>
+</li>
+<li>
+<p>Upload an image from the MVTec dataset (or a compatible image)</p>
+</li>
+<li>
+<p>Click Run prediction</p>
+</li>
+</ol>
+<p>The frontend will:</p>
+<ul>
+<li>
+<p>Send the image to /predict</p>
+</li>
+<li>
+<p>Wait for the backend response</p>
+</li>
+<li>
+<p>Display prediction results</p>
+</li>
+</ul>
+<hr />
 <h2 id="4-training-traindockerfile">4. Training — <code>train.dockerfile</code></h2>
 <p>Runs the training pipeline in a fully reproducible container.</p>
 <h3 id="build-run_1">Build &amp; run</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>docker<span class="w"> </span>build<span class="w"> </span>-f<span class="w"> </span>train.dockerfile<span class="w"> </span>-t<span class="w"> </span>anomaly-train<span class="w"> </span>.
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>anomaly-train
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>docker<span class="w"> </span>build<span class="w"> </span>-f<span class="w"> </span>train.dockerfile<span class="w"> </span>-t<span class="w"> </span>anomaly-train<span class="w"> </span>.
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>anomaly-train
 </span></code></pre></div>
 <h2 id="5-evaluation-evaluationdockerfile">5. Evaluation  — <code>evaluation.dockerfile</code></h2>
 <p>Runs model evaluation on a dataset to compute metrics in a controlled and reproducible environment.</p>
 <h3 id="build-run_2">Build &amp; run</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>docker<span class="w"> </span>build<span class="w"> </span>-f<span class="w"> </span>evaluation.dockerfile<span class="w"> </span>-t<span class="w"> </span>anomaly-eval<span class="w"> </span>.
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>anomaly-eval
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>docker<span class="w"> </span>build<span class="w"> </span>-f<span class="w"> </span>evaluation.dockerfile<span class="w"> </span>-t<span class="w"> </span>anomaly-eval<span class="w"> </span>.
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>anomaly-eval
 </span></code></pre></div>
 <h2 id="6-inference-inferencedockerfile">6. Inference — <code>inference.dockerfile</code></h2>
 <p>Runs offline inference tasks such as heatmap generation, overlay visualization and batch prediction.</p>
 <h3 id="build-run_3">Build &amp; run</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>docker<span class="w"> </span>build<span class="w"> </span>-f<span class="w"> </span>inference.dockerfile<span class="w"> </span>-t<span class="w"> </span>anomaly-infer<span class="w"> </span>.
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>anomaly-infer
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>docker<span class="w"> </span>build<span class="w"> </span>-f<span class="w"> </span>inference.dockerfile<span class="w"> </span>-t<span class="w"> </span>anomaly-infer<span class="w"> </span>.
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>anomaly-infer
 </span></code></pre></div>
 <h2 id="7-data-drifting-demo-data_drift_demodockerfile">7. Data drifting Demo — <code>data_drift_demo.dockerfile</code></h2>
 <p>Runs an end-to-end data drift experiment at container runtime via an entrypoint script (not during image build). Typical steps include generating drifted datasets, running the API, calling it, and producing plots.</p>
