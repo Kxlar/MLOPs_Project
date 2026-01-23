@@ -76,7 +76,7 @@ sends images to the FastAPI backend and displays the returned prediction.
 
 ---
 
-## 1. Running the Backend (Required)
+### 1. Running the Backend (Required)
 
 The frontend expects the backend to be available at:
 ```bash
@@ -90,7 +90,7 @@ cd ~/projects/MLOPs_Project
 uv run uvicorn src.anomaly_detection.api:app --host 0.0.0.0 --port 8000
 ```
 
-## 2. Running the Frontend (Streamlit)
+### 2. Running the Frontend (Streamlit)
 
 Open a second terminal and run:
 
