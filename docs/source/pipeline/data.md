@@ -12,7 +12,8 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
-##  2. Data module
+## 2. Data loading
+
 The data module (`src/anomaly_detection/data.py`) is responsible for:
 
 - Loading images from the dataset folders
@@ -21,15 +22,23 @@ The data module (`src/anomaly_detection/data.py`) is responsible for:
 - Loading pixel-level ground-truth masks (for evaluation)
 - (Optional) Saving an augmented (“drifted”) dataset to disk
 
+
+To verify you have the dataset in the correct structure, load dataset
+
+```bash
+uv run python src/anomaly_detection/data.py \
+  --data_root ./data/raw \
+  --class_name carpet \
+  --img_size 224 \
+  --batch_size 8
+
+```
+
 ---
 
-## 3. older structure
+## 3. Folder structure
 
-The code searches using this pattern:
-
-- `data_root/<class_name>/<split>/*/*.*`
-
-So your dataset should look like:
+Dataset folder structure:
 
 ```text
 data/raw/
@@ -55,15 +64,4 @@ data/raw/
 ---
 
 
-## 4. Data loading
 
-Use this to verify you have the dataset in the correct structure:
-
-```bash
-uv run python src/anomaly_detection/data.py \
-  --data_root ./data/raw \
-  --class_name carpet \
-  --img_size 224 \
-  --batch_size 8
-
-```

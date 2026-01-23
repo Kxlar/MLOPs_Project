@@ -2,23 +2,25 @@
 
 # Inference pipeline
 
-## Inference generates:
-- anomaly heatmaps
-- overlay images (optional)
-- per-image anomaly scores (optional JSONL)
+The inference performs offline anomaly detection on unseen images using a frozen DINOv3 feature extractor and a precomputed memory bank. It compares patch-level image features against the memory bank via k-nearest-neighbor distances to generate anomaly heatmaps, optional overlay visualizations, and per-image anomaly scores for analysis, visualization, and downstream evaluation—without retraining the model.
 
-Script: `src/anomaly_detection/inference.py`
+## Run inference
 
-## How it works:
+Example (test split):
 
-1. Loads test images
-2. Loads DINOv3 + feature extractor
-3. Loads memory bank (`.pt`)
-4. Computes patch-level anomaly scores using kNN distances
-5. Upsamples anomaly map to image size
-6. Saves heatmaps / overlays + optional scores
+```bash
+uv run python src/anomaly_detection/inference.py \
+  --data_root ./data/raw \
+  --class_name carpet \
+  --weights_path ./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth \
+  --memory_bank_path ./models/memory_bank.pt \
+  --output_dir ./results/figures \
+  --img_size 224 \
+  --batch_size 8 \
+  --k 10
+```
 
----
+
 
 ## Inputs
 
@@ -44,18 +46,3 @@ Script: `src/anomaly_detection/inference.py`
 
 ---
 
-## Run inference
-
-Example (test split):
-
-```bash
-uv run python src/anomaly_detection/inference.py \
-  --data_root ./data/raw \
-  --class_name carpet \
-  --weights_path ./models/dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth \
-  --memory_bank_path ./models/memory_bank.pt \
-  --output_dir ./results/figures \
-  --img_size 224 \
-  --batch_size 8 \
-  --k 10
-```
