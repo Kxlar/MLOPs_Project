@@ -455,7 +455,7 @@ Build screenshot:
 
 [![Build](figures/build.png)](figures/build.png)
 
-There is not much to see as the images that we succesfully used were built locally and pushed into the repository. In particular, we did not use triggers to build images automatically as we encountered issues with github permissions and some errors the github repo's owner tried enabling .
+There is not much to see as the images that we succesfully used were built locally and pushed into the repository. In particular, we did not use triggers to build images automatically as we encountered issues with github permissions, and some errors when the github repo's owner tried enabling GCP services.
 
 ### Question 22
 
@@ -470,7 +470,7 @@ There is not much to see as the images that we succesfully used were built local
 >
 > Answer:
 
-We managed to build the memory bank required by our model using the Compute Engine. Although it would have been possible to construct it locally, using the cloud engine provided access to more powerful hardware and allowed us to better manage resources. This approach is particularly useful for larger datasets or more computationally demanding tasks, as it gives flexibility to experiment with different machine types and configurations. By using the cloud, we could ensure that the process was reproducible and isolated, while also enabling easier collaboration among team members who may not have equivalent local hardware. Overall, this setup provided a reliable and scalable environment for building the memory bank.
+We managed to build the memory bank required by our model using the Compute Engine. Although it would have been possible to construct it locally, using the cloud engine provided access to more powerful hardware and allowed us to better manage resources. This approach is particularly useful for larger datasets or more computationally demanding tasks, as it gives flexibility to experiment with different machine types and configurations. By using the cloud, we could ensure that the process was reproducible and isolated, while also enabling easier collaboration among team members who may not have equivalent local hardware. This setup was useful and scalable environment for building the memory bank, or could be used for training some models even from scratch.
 
 
 ## Deployment
