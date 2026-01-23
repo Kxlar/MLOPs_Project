@@ -69,5 +69,5 @@ This project was developed as part of the **02476 MLOps course at DTU**.
 
 - Lea
 - Pierre-Eduard
-- loic (aka Cloud Wizard)
+- Loic (aka Cloud Wizard)
 - Jawhara
