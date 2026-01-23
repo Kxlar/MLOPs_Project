@@ -23,8 +23,8 @@ The pipeline is built around DINOv3, a self-supervised Vision Transformer:
 2. Build a memory bank of normal visual patterns
 3. Compare test image features against the memory bank using distance-based scoring
 4. Produce:
-   - Image-level anomaly scores
-   - Pixel-level anomaly heatmaps
+   -- Image-level anomaly scores
+   -- Pixel-level anomaly heatmaps
 
 ---
 
