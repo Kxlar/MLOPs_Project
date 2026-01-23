@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#anomaly-detection-mvtec" class="md-skip">
+        <a href="#anomaly-detection-mvtec-ad" class="md-skip">
           Skip to content
         </a>
       
@@ -201,6 +201,17 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="." class="md-nav__link md-nav__link--active">
         
   
@@ -210,6 +221,74 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-zero-shot-anomaly-detection" class="md-nav__link">
+    Why Zero-Shot Anomaly Detection?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-at-a-glance" class="md-nav__link">
+    Method at a Glance
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    Features
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset" class="md-nav__link">
+    Dataset
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    Getting Started
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-context" class="md-nav__link">
+    Project Context
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -682,6 +761,63 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-zero-shot-anomaly-detection" class="md-nav__link">
+    Why Zero-Shot Anomaly Detection?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-at-a-glance" class="md-nav__link">
+    Method at a Glance
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    Features
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset" class="md-nav__link">
+    Dataset
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    Getting Started
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-context" class="md-nav__link">
+    Project Context
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -695,10 +831,63 @@
                   
 
 
-<h1 id="anomaly-detection-mvtec">Anomaly Detection (MVTec)</h1>
-<p>This project implements an <strong>Zero-shot anomaly detection</strong> for industrial inspection using MVTec AD dataset and working with Carpet specifically.
-It supports training a memory bank, generating anomaly heatmaps, and evaluating results — locally, in Docker, or on cloud VMs.</p>
+<h1 id="anomaly-detection-mvtec-ad">Anomaly Detection (MVTec AD)</h1>
+<h2 id="overview">Overview</h2>
+<p>This project implements a <strong>zero-shot anomaly detection pipeline</strong> for industrial visual inspection using the <strong>MVTec AD dataset</strong>, with a focus on the <strong>Carpet</strong> class.</p>
+<p>The goal is to detect anomalous regions in images <strong>without using any defective samples during training</strong>, making the approach suitable for real-world industrial settings where defects are rare or unknown in advance.</p>
 <hr />
+<h2 id="why-zero-shot-anomaly-detection">Why Zero-Shot Anomaly Detection?</h2>
+<p>In manufacturing, collecting and labeling defective samples is often expensive, time-consuming, or impractical.<br />
+Zero-shot anomaly detection addresses this challenge by learning only from <strong>normal (defect-free) data</strong> and identifying deviations at inference time.</p>
+<p>This project explores whether vision foundation models can enable robust anomaly detection without pre-training nor task-specific fine-tuning.</p>
+<hr />
+<h2 id="method-at-a-glance">Method at a Glance</h2>
+<p>The pipeline is built around <strong>DINOv3</strong>, a self-supervised Vision Transformer:</p>
+<ol>
+<li>Extract patch-level features from normal training images</li>
+<li>Build a <strong>memory bank</strong> of normal visual patterns</li>
+<li>Compare test image features against the memory bank using distance-based scoring</li>
+<li>Produce:</li>
+<li>Image-level anomaly scores</li>
+<li>Pixel-level anomaly heatmaps</li>
+</ol>
+<hr />
+<h2 id="features">Features</h2>
+<p>The project supports:</p>
+<ul>
+<li>🧠 <strong>Zero-shot feature extraction</strong> using DINOv3</li>
+<li>🏦 <strong>Memory bank construction</strong> from normal samples</li>
+<li>🔥 <strong>Pixel-level anomaly heatmaps</strong></li>
+<li>📊 <strong>Image-level &amp; pixel-level evaluation (ROC AUC)</strong></li>
+<li>🧪 <strong>Data augmentation and drift simulation</strong></li>
+<li>🐳 <strong>Dockerized training and inference</strong></li>
+<li>🚀 <strong>FastAPI backend and frontend</strong></li>
+<li>☁️ <strong>Cloud deployment (GCP-ready)</strong></li>
+<li>🔁 <strong>Reproducible experiments with Hydra</strong></li>
+</ul>
+<hr />
+<h2 id="dataset">Dataset</h2>
+<p>We use the <strong>MVTec Anomaly Detection (MVTec AD)</strong> dataset, a standard benchmark for industrial anomaly detection.</p>
+<ul>
+<li>Training set: normal images only</li>
+<li>Test set: normal + defective images with pixel-level ground truth masks</li>
+<li>Focus class: <strong>Carpet</strong></li>
+</ul>
+<hr />
+<h2 id="getting-started">Getting Started</h2>
+<p>If you are new to the project, start here:</p>
+<p>➡️ <strong><a href="getting-started/">Getting Started</a></strong><br />
+➡️ <strong><a href="pipeline/train/">Training Pipeline</a></strong><br />
+➡️ <strong><a href="pipeline/inference/">Inference &amp; Heatmaps</a></strong></p>
+<hr />
+<h2 id="project-context">Project Context</h2>
+<p>This project was developed as part of the <strong>02476 MLOps course at DTU</strong>, with an emphasis on:</p>
+<ul>
+<li>Clean code structure</li>
+<li>Reproducibility</li>
+<li>Automation</li>
+<li>Deployment-ready ML systems</li>
+</ul>
 
 
 
