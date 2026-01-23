@@ -28,7 +28,7 @@ uv run ruff check . --fix
 ```
 
 ## pre-commit Hooks (on commit/push)
-Hooks are defined in [.pre-commit-config.yaml](../../.pre-commit-config.yaml). They include:
+Hooks are defined in `.pre-commit-config.yaml`. They include:
 - General hygiene: trailing whitespace, end-of-file, YAML check, large files
 - Ruff lint with `--fix` and `ruff-format`
 - Unit tests via `pytest`
