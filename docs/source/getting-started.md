@@ -178,14 +178,25 @@ docker run -p 8000:8000 anomaly-backend
 ---
 
 ## 7. Run BentoML API
+Build and run the backend API using BentoML.
 
-Build and run the backend API using BentoML:
+Convert our model into a ONNX model:
 ```bash
-bentoml build
+uv run export_onnx_paranoid.py
+```
+
+Initialize BentoML:
+```bash
+uv run bentoml --version
+```
+
+Build the docker container:
+```bash
+uv run bentoml build
 bentoml containerize anomaly_detection_service:latest
 ```
 
-Copy the container tag and run:
+Copy the container tag and run the following command to launch the API:
 ```bash
 docker run --rm -p 3000:3000 anomaly_detection_service:TAG
 ```
