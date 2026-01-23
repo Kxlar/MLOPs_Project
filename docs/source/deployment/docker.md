@@ -70,10 +70,6 @@ uv run src/anomaly_detection/api_inference.py
 This project includes a lightweight Streamlit frontend that allows users to
 upload an image and run anomaly detection through the backend API.
 
-The frontend does not perform inference itself — it acts as a client that
-sends images to the FastAPI backend and displays the returned prediction.
-
-
 ---
 
 ### 1. Running the Backend (Required)
@@ -115,24 +111,6 @@ http://localhost:8501
 
 ---
 
-### Using the Frontend
-
-1. Open the Streamlit page
-
-2. Upload an image from the MVTec dataset (or a compatible image)
-
-3. Click Run prediction
-
-The frontend will:
-
-* Send the image to /predict
-
-* Wait for the backend response
-
-* Display prediction results
-
----
-
 
 ## 4. Training — `train.dockerfile`
 Runs the training pipeline in a fully reproducible container.
@@ -162,6 +140,6 @@ docker run --rm anomaly-infer
 ```
 
 ## 7. Data drifting Demo — `data_drift_demo.dockerfile`
-Runs an end-to-end data drift experiment at container runtime via an entrypoint script (not during image build). Typical steps include generating drifted datasets, running the API, calling it, and producing plots.
+Runs an end-to-end data drift experiment at container runtime via an entrypoint script (not during image build).
 
-Building and running the docker for data drifting is shown in section Pipeline/ Data Drift.
+Details are provided in **Pipeline → Data Drift**.
