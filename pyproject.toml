@@ -38,6 +38,7 @@ dependencies = [
     "pydantic>=2.12.5",
     "python-multipart>=0.0.21",
     "scikit-learn>=1.7.2",
+    "snakeviz>=2.2.2",
     "torch==2.6.0",
     "torchvision==0.21.0",
     "typer==0.15.1",
